@@ -29,8 +29,28 @@ let BoardRepository = class BoardRepository extends typeorm_1.Repository {
         await this.save(board);
         return board;
     }
-    async updateBoard(id, status) {
-        const board = await this.findOne({ where: { id } });
+    async getAllBoards() {
+        return await this.find();
+    }
+    async getBoardById(id) {
+        const found = await this.findOne({ where: { id } });
+        return found;
+    }
+    async updateBoard(id, updateBoardDto) {
+        const { title, description } = updateBoardDto;
+        const board = await this.getBoardById(id);
+        if (title) {
+            board.title = title;
+        }
+        if (description) {
+            board.description = description;
+        }
+        board.updatedAt = new Date();
+        await this.save(board);
+        return board;
+    }
+    async updateBoardStatus(id, status) {
+        const board = await this.getBoardById(id);
         board.status = status;
         board.updatedAt = new Date();
         await this.save(board);

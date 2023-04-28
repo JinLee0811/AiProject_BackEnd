@@ -7,8 +7,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BoardStatus } from '../board-status.enum';
-// @EntityRepository(Board)
-// export class BoardRepository extends Repository<Board> {}
+import { title } from 'process';
+import { UpdateBoardDto } from 'dist/boards/dto/update-board.dto';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
@@ -26,9 +26,31 @@ export class BoardRepository extends Repository<Board> {
     await this.save(board);
     return board;
   }
+  async getAllBoards() {
+    return await this.find();
+  }
+  async getBoardById(id: number) {
+    const found = await this.findOne({ where: { id } });
+    return found;
+  }
 
-  async updateBoard(id: number, status: BoardStatus) {
-    const board = await this.findOne({ where: { id } });
+  async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
+    const { title, description } = updateBoardDto;
+    const board = await this.getBoardById(id);
+    if (title) {
+      board.title = title;
+    }
+    if (description) {
+      board.description = description;
+    }
+    board.updatedAt = new Date();
+
+    await this.save(board);
+    return board;
+  }
+
+  async updateBoardStatus(id: number, status: BoardStatus) {
+    const board = await this.getBoardById(id);
     board.status = status;
     board.updatedAt = new Date();
 
@@ -36,36 +58,3 @@ export class BoardRepository extends Repository<Board> {
     return board;
   }
 }
-//==================================================================
-// @CustomRepository(Board)
-// export class BoardRepository extends Repository<Board> {
-//   async createBoard(createBoardDto: CreateBoardDto) {
-//     const { title, content } = createBoardDto;
-//     const board = new Board();
-//     board.title = title;
-//     board.content = content;
-
-//     await this.save(board);
-//     return board;
-//   }
-
-//   async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
-//     const board = await this.findOne({ where: { id } });
-//     const { title, content } = updateBoardDto;
-
-//     if (title) {
-//       board.title = title;
-//     }
-//     if (content) {
-//       board.content = content;
-//     }
-//     board.updatedAt = new Date();
-
-//     await this.save(board);
-//     return board;
-//   }
-
-//   async removeBoard(id: number): Promise<void> {
-//     await this.delete(id);
-//   }
-// }

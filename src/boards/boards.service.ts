@@ -4,6 +4,7 @@ import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardService {
@@ -18,20 +19,23 @@ export class BoardService {
   }
 
   async getAllBoards() {
-    return await this.boardRepository.find();
+    return await this.boardRepository.getAllBoards();
   }
 
   async getBoardById(id: number) {
-    const found = await this.boardRepository.findOne({ where: { id } });
+    const found = await this.boardRepository.getBoardById(id);
     if (!found) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
     }
-
     return found;
   }
 
+  async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
+    return await this.boardRepository.updateBoard(id, updateBoardDto);
+  }
+
   async updateBoardStatus(id: number, status: BoardStatus) {
-    return await this.boardRepository.updateBoard(id, status);
+    return await this.boardRepository.updateBoardStatus(id, status);
   }
 
   async deleteBoard(id: number): Promise<void> {

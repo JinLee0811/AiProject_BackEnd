@@ -15,6 +15,7 @@ import {
 import { Board } from './board.entity';
 import { BoardService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { BoardStatus } from './board-status.enum';
 @Controller('boards')
@@ -43,12 +44,14 @@ export class BoardController {
   ): Promise<Board> {
     return await this.boardService.updateBoardStatus(id, status);
   }
-  // //@Patch(':id/')
-  // async updateBoard():Promise<Board>{
-  // return await this.boardService.updateBoard();
 
-  // }
-
+  @Patch(':id')
+  async updateBoard(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBoardDto: UpdateBoardDto,
+  ): Promise<Board> {
+    return await this.boardService.updateBoard(id, updateBoardDto);
+  }
   // deleteBoard(@Param('id', ParseIntPipe) id,
   //delete 정상 응답 추가해야함!
   @Delete(':id')

@@ -24,17 +24,20 @@ let BoardService = class BoardService {
         return this.boardRepository.createBoard(createBoardDto);
     }
     async getAllBoards() {
-        return await this.boardRepository.find();
+        return await this.boardRepository.getAllBoards();
     }
     async getBoardById(id) {
-        const found = await this.boardRepository.findOne({ where: { id } });
+        const found = await this.boardRepository.getBoardById(id);
         if (!found) {
             throw new common_1.NotFoundException(`Can't find Board with id ${id}`);
         }
         return found;
     }
+    async updateBoard(id, updateBoardDto) {
+        return await this.boardRepository.updateBoard(id, updateBoardDto);
+    }
     async updateBoardStatus(id, status) {
-        return await this.boardRepository.updateBoard(id, status);
+        return await this.boardRepository.updateBoardStatus(id, status);
     }
     async deleteBoard(id) {
         if (!id) {

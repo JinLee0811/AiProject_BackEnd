@@ -16,6 +16,7 @@ exports.BoardController = void 0;
 const common_1 = require("@nestjs/common");
 const boards_service_1 = require("./boards.service");
 const create_board_dto_1 = require("./dto/create-board.dto");
+const update_board_dto_1 = require("./dto/update-board.dto");
 const board_status_validation_pipe_1 = require("./pipes/board-status-validation.pipe");
 const board_status_enum_1 = require("./board-status.enum");
 let BoardController = class BoardController {
@@ -33,6 +34,9 @@ let BoardController = class BoardController {
     }
     async updateBoardStatus(id, status) {
         return await this.boardService.updateBoardStatus(id, status);
+    }
+    async updateBoard(id, updateBoardDto) {
+        return await this.boardService.updateBoard(id, updateBoardDto);
     }
     async deleteBoard(id) {
         await this.boardService.deleteBoard(id);
@@ -59,13 +63,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "createBoard", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Patch)(':id/status'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)('status', board_status_validation_pipe_1.BoardStatusValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], BoardController.prototype, "updateBoardStatus", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, update_board_dto_1.UpdateBoardDto]),
+    __metadata("design:returntype", Promise)
+], BoardController.prototype, "updateBoard", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
