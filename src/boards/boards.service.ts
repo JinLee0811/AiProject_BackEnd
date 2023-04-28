@@ -2,8 +2,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
-
+import { BoardStatus } from './board-status.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -14,15 +13,15 @@ export class BoardService {
     private boardRepository: BoardRepository,
   ) {}
 
-  create(createBoardDto: CreateBoardDto) {
+  createBoard(createBoardDto: CreateBoardDto) {
     return this.boardRepository.createBoard(createBoardDto);
   }
 
-  async getAll() {
+  async getAllBoards() {
     return await this.boardRepository.find();
   }
 
-  async getOne(id: number) {
+  async getBoardById(id: number) {
     const found = await this.boardRepository.findOne({ where: { id } });
     if (!found) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
@@ -31,15 +30,14 @@ export class BoardService {
     return found;
   }
 
-  async update(id: number, updateBoardDto: UpdateBoardDto) {
-    return await this.boardRepository.updateBoard(id, updateBoardDto);
+  async updateBoardStatus(id: number, status: BoardStatus) {
+    return await this.boardRepository.updateBoard(id, status);
   }
 
-  async delete(id: number): Promise<void> {
+  async deleteBoard(id: number): Promise<void> {
     if (!id) {
       throw new NotFoundException(`Invalid Board ID`);
     }
-    //console.log('########' + id);
 
     const result = await this.boardRepository.delete({ id });
     if (result.affected === 0) {
