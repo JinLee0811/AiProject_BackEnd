@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { BoardStatus } from '../board-status.enum';
 import { title } from 'process';
-import { UpdateBoardDto } from 'dist/boards/dto/update-board.dto';
+import { UpdateBoardDto } from '../dto/update-board.dto';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
