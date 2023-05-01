@@ -3,49 +3,58 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { ParseIntPipe } from '@nestjs/common/pipes';
-import { BoardStatus } from './board-status.enum';
 import { Board } from './board.entity';
-import { BoardsService } from './boards.service';
+import { BoardService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
-
+import { BoardStatus } from './board-status.enum';
 @Controller('boards')
-export class BoardsController {
-  constructor(private boardsService: BoardsService) {}
+export class BoardController {
+  constructor(private readonly boardService: BoardService) {}
 
   @Get()
-  getAllBoard(): Promise<Board[]> {
-    return this.boardsService.getAllBoards();
+  async getAllBoards(): Promise<Board[]> {
+    return await this.boardService.getAllBoards();
   }
 
-  @Post('/')
-  @UsePipes(ValidationPipe)
-  createBoard(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
-    return this.boardsService.createBoard(createBoardDto);
+  @Get(':id')
+  async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+    return await this.boardService.getBoardById(id);
   }
 
-  @Get('/:id')
-  getBoardById(@Param('id') id: number): Promise<Board> {
-    return this.boardsService.getBoardById(id);
+  @Post()
+  async createBoard(@Body() createBoardDto: CreateBoardDto): Promise<Board> {
+    return await this.boardService.createBoard(createBoardDto);
   }
 
-  @Delete('/:id')
-  deleteBoard(@Param('id', ParseIntPipe) id): Promise<void> {
-    return this.boardsService.deleteBoard(id);
-  }
-
-  @Patch('/:id/status')
-  updateBoardStatus(
+  @Patch(':id/status') //수정해야함(status수정, 게시글 수정 별개)
+  async updateBoardStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', BoardStatusValidationPipe) status: BoardStatus,
-  ) {
-    return this.boardsService.updateBoardStatus(id, status);
+  ): Promise<Board> {
+    return await this.boardService.updateBoardStatus(id, status);
+  }
+
+  @Patch(':id')
+  async updateBoard(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBoardDto: UpdateBoardDto,
+  ): Promise<Board> {
+    return await this.boardService.updateBoard(id, updateBoardDto);
+  }
+  // deleteBoard(@Param('id', ParseIntPipe) id,
+  //delete 정상 응답 추가해야함!
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.boardService.deleteBoard(id);
   }
 }

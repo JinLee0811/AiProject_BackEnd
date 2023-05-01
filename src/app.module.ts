@@ -1,14 +1,14 @@
-import { Module, ValidationPipe } from '@nestjs/common';
-import { BoardsModule } from './boards/boards.module';
-import { typeORMConfig } from './configs/typeorm.config';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardsController } from './boards/boards.controller';
-import { APP_PIPE } from '@nestjs/core';
-import { BoardsService } from './boards/boards.service';
+import { BoardModule } from './boards/boards.module';
+import { typeORMConfig } from './configs/typeorm.config';
 
+import { BoardController } from './boards/boards.controller';
+import { BoardService } from './boards/boards.service';
+import { BoardRepository } from './boards/repositories/board.repository';
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), BoardsModule],
-  // controllers: [BoardsController],
-  // providers: [{ provide: APP_PIPE, useClass: ValidationPipe }],
+  imports: [TypeOrmModule.forRoot(typeORMConfig), BoardModule],
+  controllers: [BoardController],
+  providers: [BoardService, BoardRepository],
 })
 export class AppModule {}

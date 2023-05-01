@@ -1,9 +1,8 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BoardStatus } from './board-status.enum';
-
 @Entity()
 export class Board extends BaseEntity {
-  @PrimaryGeneratedColumn() // primary key 임을 설정
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -11,7 +10,16 @@ export class Board extends BaseEntity {
 
   @Column()
   description: string;
-
   @Column()
   status: BoardStatus;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updatedAt: Date;
 }

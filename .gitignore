@@ -2,6 +2,10 @@
 /dist
 /node_modules
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e314778c978b95732d0e0b8bc35f13e895656027
 # Logs
 logs
 *.log
@@ -33,5 +37,11 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+<<<<<<< HEAD
 
 .env
+=======
+node_modules
+
+.env
+>>>>>>> e314778c978b95732d0e0b8bc35f13e895656027
