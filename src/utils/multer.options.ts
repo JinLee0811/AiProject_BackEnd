@@ -13,24 +13,6 @@ const s3Client = new S3Client({
   },
 });
 
-// Multer 설정
-// export const multerOptions: MulterOptions = {
-//   storage: multerS3({
-//     s3: s3Client,
-//     bucket: process.env.AWS_S3_BUCKET_NAME,
-//     // acl: 'public-read',
-//     contentType: multerS3.AUTO_CONTENT_TYPE,
-//     metadata: (req, file, cb) => {
-//       cb(null, { fieldName: file.fieldname });
-//     },
-//     key: (req, file, cb) => {
-//       // const extension = file.originalname.split('.').pop();
-//       // const fileName = uuid();
-//       const uploadDirectory = 'crop';
-//       cb(null, `${uploadDirectory}/${Date.now()}_${file.originalname}`);
-//     },
-//   }),
-
 export const multerOptions = (dirName: string): MulterOptions => {
   const options = {
     storage: multerS3({
