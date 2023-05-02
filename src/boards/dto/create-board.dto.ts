@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateBoardDto {
   @IsNotEmpty()
@@ -6,4 +6,12 @@ export class CreateBoardDto {
 
   @IsNotEmpty()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  board_img?: string;
+
+  like_number?: number;
+
+  view_number?: number;
 }

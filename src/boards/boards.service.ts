@@ -14,8 +14,9 @@ export class BoardService {
     private boardRepository: BoardRepository,
   ) {}
 
-  createBoard(createBoardDto: CreateBoardDto) {
-    return this.boardRepository.createBoard(createBoardDto);
+  createBoard(createBoardDto: CreateBoardDto, imageUrl?: string) {
+    //const imageUrl = file.location;
+    return this.boardRepository.createBoard(createBoardDto, imageUrl);
   }
 
   async getAllBoards() {
@@ -30,8 +31,12 @@ export class BoardService {
     return found;
   }
 
-  async updateBoard(id: number, updateBoardDto: UpdateBoardDto) {
-    return await this.boardRepository.updateBoard(id, updateBoardDto);
+  async updateBoard(
+    id: number,
+    updateBoardDto: UpdateBoardDto,
+    imageUrl?: string,
+  ) {
+    return await this.boardRepository.updateBoard(id, updateBoardDto, imageUrl);
   }
 
   async updateBoardStatus(id: number, status: BoardStatus) {

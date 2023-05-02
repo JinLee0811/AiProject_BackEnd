@@ -10,8 +10,18 @@ export class Board extends BaseEntity {
 
   @Column()
   description: string;
+
   @Column()
   status: BoardStatus;
+
+  @Column({ default: null, nullable: true })
+  board_img: string;
+
+  @Column({ default: 0 })
+  like_number: number;
+
+  @Column({ default: 0 })
+  view_number: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBoardDto {
   @IsNotEmpty()
@@ -6,4 +6,8 @@ export class UpdateBoardDto {
 
   @IsNotEmpty()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  board_img?: string;
 }
