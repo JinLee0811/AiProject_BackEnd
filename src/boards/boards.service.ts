@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //boards.service.ts
 import {
   BadRequestException,
@@ -5,6 +6,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+=======
+import { Injectable, NotFoundException } from '@nestjs/common';
+>>>>>>> dev
 import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';

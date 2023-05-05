@@ -1,5 +1,3 @@
-//repositories/board.repository.ts 데이터 관련 코드
-//import { EntityRepository, Repository } from 'typeorm';
 import { Board } from '../board.entity';
 import { CreateBoardDto } from '../dto/create-board.dto';
 import { Injectable } from '@nestjs/common';
