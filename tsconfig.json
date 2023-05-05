@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+//    "moduleResolution": "node",
+//    "module": "es6",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

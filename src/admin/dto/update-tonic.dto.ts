@@ -9,5 +9,5 @@ export class UpdateTonicDto {
   description: string;
 
   @IsNotEmpty()
-  tonic_img: string;
+  categoryIds: []
 }

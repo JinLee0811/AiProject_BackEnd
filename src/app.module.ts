@@ -17,6 +17,11 @@ import { TonicsService } from "./tonics/tonics.service";
 import { TonicRepository } from "./tonics/repositories/tonic.repository";
 import { CategoryRepository } from "./tonics/repositories/catetory.repository";
 import { AdminService } from "./admin/admin.service";
+import {SolutionsController} from "./solutions/solutions.controller";
+import {SolutionsService} from "./solutions/solutions.service";
+import {SolutionRepository} from "./solutions/solution.repository";
+import {TonicCategoryRepository} from "./tonics/repositories/tonic-category.repository";
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
@@ -26,7 +31,7 @@ import { AdminService } from "./admin/admin.service";
     TonicsModule,
     AdminModule,
   ],
-  controllers: [BoardController, TonicsController, AdminController],
-  providers: [BoardService, BoardRepository, TonicsService, TonicRepository, CategoryRepository, AdminService],
+  controllers: [BoardController, TonicsController, SolutionsController, AdminController],
+  providers: [BoardService, BoardRepository, SolutionsService, SolutionRepository, TonicsService, TonicRepository, CategoryRepository, AdminService, TonicCategoryRepository],
 })
 export class AppModule {}

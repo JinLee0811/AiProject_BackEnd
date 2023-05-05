@@ -13,17 +13,18 @@ export class TonicsService {
   ) {}
 
   // getTonics: 영양제 전체 조회
-  getTonics() {
-    return this.tonicRepository.getTonics();
+  async getTonics() {
+    return await this.tonicRepository.getTonics();
   }
 
   // getTonicsByCategory: 카테고리 별 영양제 조회
-  getTonicsByCategory(categoryId: number) {
-    return this.tonicRepository.getTonicsByCategory(categoryId);
+  async getTonicsByCategory(categoryId: number) {
+    return await this.tonicRepository.getTonicsByCategory(categoryId);
   }
 
   // getCategories: 영양제 카테고리 조회
-  getCategories() {
-    return this.categoryRepository.getCategories()
+  async getCategories() {
+    console.log("?")
+    return await this.categoryRepository.getCategories()
   }
 }

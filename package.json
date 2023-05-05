@@ -30,11 +30,16 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "libtorchjs": "^1.0.0-alpha.4",
     "multer-s3": "^3.0.1",
     "mysql2": "^3.2.3",
+    "node-fetch": "^3.3.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
+    "sharp": "^0.32.1",
+    "torchjs": "^13.0.0",
     "typeorm": "^0.3.15",
+    "typeorm-naming-strategies": "^4.1.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

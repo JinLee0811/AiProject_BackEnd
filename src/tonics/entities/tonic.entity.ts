@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./category.entity";
-import { JoinTable } from "typeorm/browser";
+// import { JoinTable } from "typeorm/browser";
+import { JoinTable } from "typeorm"
 
 @Entity()
 export class Tonic extends BaseEntity {
@@ -28,6 +29,10 @@ export class Tonic extends BaseEntity {
   createdAt: Date;
 
   @ManyToMany(() => Category, category => category.tonics)
-  @JoinTable()
+  @JoinTable({
+    name: "tonic_category",
+    joinColumn: { name: 'tonic_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' }
+  })
   categories: Category[];
 }

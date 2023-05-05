@@ -9,10 +9,10 @@ export class Solution extends BaseEntity {
   disease_name: string;
 
   @Column()
-  crop_name: string;
+  cropName: string;
 
   @Column()
-  disease_solution: string;
+  diseaseSolution: string;
 
 
   @Column({

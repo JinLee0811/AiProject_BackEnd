@@ -18,6 +18,8 @@ export class SolutionsController {
   @Post("/predict")
   @UseInterceptors(FileInterceptor('image', multerOptions('crop')))
   getSolutionByPredict(@UploadedFile() file: Express.MulterS3.File) {
+    // 요청: 이미지 1장
+    // 응답: 진단받은 질병에 대한 해결책
     return this.solutionsService.getSolutionByPredict(file.location);
   }
 
@@ -31,11 +33,12 @@ export class SolutionsController {
   @Get("/solutions")
   getSolutions() {
 
-
   }
 
   // deleteSolutionsById: (마이페이지) 해결책 삭제
   @Delete("solutions/:diseaseId")
-  deleteSolutionsById() {}
+  deleteSolutionsById() {
+
+  }
 
 }
