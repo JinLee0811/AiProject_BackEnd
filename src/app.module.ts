@@ -8,10 +8,16 @@ import { BoardService } from './boards/boards.service';
 import { BoardRepository } from './boards/repositories/board.repository';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from './utils/multer.options';
+import { CommentModule } from './comments/comment.module';
+import { UserModule } from './users/user.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
     BoardModule,
+    CommentModule,
+    UserModule,
+
     MulterModule.register(multerOptions('')),
   ],
   controllers: [BoardController],

@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { BoardStatus } from '../board-status.enum';
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
@@ -14,12 +15,12 @@ export class BoardRepository extends Repository<Board> {
   }
   //게시글 생성
   async createBoard(createBoardDto: CreateBoardDto, imageUrl?: string) {
-    const { title, description } = createBoardDto;
+    const { title, content } = createBoardDto;
 
     const board = this.create({
       title,
-      description,
-      board_img: imageUrl ?? null,
+      content,
+      image: imageUrl ?? null,
       status: BoardStatus.PUBLIC,
     });
     await this.save(board);
@@ -34,7 +35,7 @@ export class BoardRepository extends Repository<Board> {
   //특정 게시글 조회
   async getBoardById(id: number) {
     const found = await this.findOne({ where: { id } });
-    found.view_number++;
+    found.views++;
     await this.save(found); //조회수 증가
     return found;
   }
@@ -44,19 +45,26 @@ export class BoardRepository extends Repository<Board> {
     updateBoardDto: UpdateBoardDto,
     imageUrl?: string,
   ) {
-    const { title, description, board_img } = updateBoardDto;
+    const { title, content, image } = updateBoardDto;
     const board = await this.getBoardById(id);
 
     board.title = title;
-    board.description = description;
+    board.content = content;
+    //console.log('***********************' + board.updated_at);
 
     if (imageUrl !== undefined) {
       // update board_img
-      board.board_img = imageUrl;
+      board.image = imageUrl;
     }
 
-    board.updatedAt = new Date();
+    if (imageUrl === undefined) {
+      // imageUrl가 undefined일 때 이미지 필드를 업데이트하지 않음
+      board.updated_at = new Date();
+      await this.save(board);
+      return board;
+    }
 
+    board.updated_at = new Date();
     await this.save(board);
     return board;
   }
@@ -64,7 +72,7 @@ export class BoardRepository extends Repository<Board> {
   async updateBoardStatus(id: number, status: BoardStatus) {
     const board = await this.getBoardById(id);
     board.status = status;
-    board.updatedAt = new Date();
+    //board.updatedAt = new Date();
 
     await this.save(board);
     return board;

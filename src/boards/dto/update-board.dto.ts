@@ -5,9 +5,9 @@ export class UpdateBoardDto {
   title: string;
 
   @IsNotEmpty()
-  description: string;
+  content: string;
 
   @IsOptional()
   @IsString()
-  board_img?: string;
+  image?: string;
 }

@@ -1,10 +1,16 @@
 //boards.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class BoardService {
@@ -16,7 +22,13 @@ export class BoardService {
 
   createBoard(createBoardDto: CreateBoardDto, imageUrl?: string) {
     //const imageUrl = file.location;
-    return this.boardRepository.createBoard(createBoardDto, imageUrl);
+    //return this.boardRepository.createBoard(createBoardDto, imageUrl);
+
+    try {
+      return this.boardRepository.createBoard(createBoardDto, imageUrl);
+    } catch (error) {
+      throw new InternalServerErrorException('게시글 생성 실패');
+    }
   }
 
   async getAllBoards() {
@@ -36,14 +48,18 @@ export class BoardService {
     updateBoardDto: UpdateBoardDto,
     imageUrl?: string,
   ) {
-    return await this.boardRepository.updateBoard(id, updateBoardDto, imageUrl);
+    try {
+      return this.boardRepository.updateBoard(id, updateBoardDto, imageUrl);
+    } catch (error) {
+      throw new InternalServerErrorException('게시글 수정 실패');
+    }
   }
 
   async updateBoardStatus(id: number, status: BoardStatus) {
-    return await this.boardRepository.updateBoardStatus(id, status);
+    return this.boardRepository.updateBoardStatus(id, status);
   }
 
-  async deleteBoard(id: number): Promise<void> {
+  async deleteBoard(id: number): Promise<string> {
     if (!id) {
       throw new NotFoundException(`Invalid Board ID`);
     }
@@ -52,7 +68,6 @@ export class BoardService {
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
     }
-
-    //return await this.boardRepository.delete(id);
+    return '삭제 완료';
   }
 }

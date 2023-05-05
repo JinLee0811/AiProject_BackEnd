@@ -21,7 +21,7 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { BoardStatus } from './board-status.enum';
 import { multerOptions } from 'src/utils/multer.options';
-@Controller('boards')
+@Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
@@ -36,12 +36,12 @@ export class BoardController {
   }
   //게시글 생성
   @Post()
-  @UseInterceptors(FileInterceptor('board_img', multerOptions('board')))
+  @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async createBoard(
     @Body() createBoardDto: CreateBoardDto,
     @UploadedFile() file,
   ): Promise<Board> {
-    console.log(file);
+    //console.log(file);
     const board = await this.boardService.createBoard(
       createBoardDto,
       file?.location,
@@ -50,7 +50,7 @@ export class BoardController {
   }
   //게시글 수정
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('board_img', multerOptions('board')))
+  @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async updateBoard(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBoardDto: UpdateBoardDto,
@@ -71,11 +71,13 @@ export class BoardController {
   ): Promise<Board> {
     return await this.boardService.updateBoardStatus(id, status);
   }
-  // deleteBoard(@Param('id', ParseIntPipe) id,
-  //delete 정상 응답 추가해야함!
+  //게시글 삭제
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteBoard(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.boardService.deleteBoard(id);
+  @HttpCode(HttpStatus.OK)
+  async deleteBoard(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
+    const message = await this.boardService.deleteBoard(id);
+    return { message };
   }
 }
