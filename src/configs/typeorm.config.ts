@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+//import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config();
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -10,18 +10,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_SCHEMA,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-<<<<<<< HEAD
-  synchronize: true,
-  timezone: 'Asia/Seoul',
-};
-
-//   //entities: [Board],
-//   synchronize: true, //// 한번 true한 뒤로는 무조건 false
-//   //autoLoadEntities: true,
-//   //logging: true,
-// };
-=======
   synchronize: false,
-  namingStrategy: new SnakeNamingStrategy(),
+  // namingStrategy: new SnakeNamingStrategy(),
 };
->>>>>>> dev

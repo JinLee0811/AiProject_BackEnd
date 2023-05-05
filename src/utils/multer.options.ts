@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 //utils/multer.options
-=======
->>>>>>> dev
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import * as multerS3 from 'multer-s3';
 import * as dotenv from 'dotenv';
