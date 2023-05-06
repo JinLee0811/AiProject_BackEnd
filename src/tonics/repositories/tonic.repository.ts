@@ -1,9 +1,7 @@
 
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Tonic } from "../entities/tonic.entity";
-import { Board } from "../../boards/board.entity";
 import { CreateTonicDto } from "../../admin/dto/create-tonic.dto";
 import { UpdateTonicDto } from "../../admin/dto/update-tonic.dto";
 

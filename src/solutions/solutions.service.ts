@@ -1,6 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BoardRepository } from '../boards/repositories/board.repository';
 import { SolutionRepository } from './solution.repository';
 // import { TorchTensor } from 'torchjs';
 // import fetch from 'node-fetch';
@@ -44,7 +43,7 @@ export class SolutionsService {
     // console.log(result)
 
     // 예측된 diseaseId를 레포지토리에 넘겨 db에서 해결책 받아옴
-    const solution = this.solutionRepository.getSolutionByPredict(1);
+    const solution = await this.solutionRepository.getSolutionByPredict(1);
     return { ...solution, crop_img: fileUrl };
   }
 

@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-//import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config();
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -11,5 +11,5 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   database: process.env.DB_SCHEMA,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: false,
-  // namingStrategy: new SnakeNamingStrategy(),
+  namingStrategy: new SnakeNamingStrategy(),
 };

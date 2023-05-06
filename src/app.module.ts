@@ -15,12 +15,12 @@ import { multerOptions } from './utils/multer.options';
 import { TonicsController } from './tonics/tonics.controller';
 import { TonicsModule } from './tonics/tonics.module';
 import { AdminModule } from './admin/admin.module';
-// import { AdminController } from './admin/admin.controller';
+import { AdminController } from './admin/admin.controller';
 import { TonicsService } from './tonics/tonics.service';
 import { TonicRepository } from './tonics/repositories/tonic.repository';
 import { CategoryRepository } from './tonics/repositories/catetory.repository';
 import { AdminService } from './admin/admin.service';
-// import { SolutionsController } from './solutions/solutions.controller';
+import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
@@ -39,8 +39,8 @@ import { TonicCategoryRepository } from './tonics/repositories/tonic-category.re
   controllers: [
     BoardController,
     TonicsController,
-    // SolutionsController,
-    // AdminController,
+    SolutionsController,
+    AdminController,
   ],
   providers: [
     BoardService,
