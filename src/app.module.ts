@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { BoardModule } from './boards/boards.module';
 import { typeORMConfig } from './configs/typeorm.config';
-import { App } from 'electron';
 
 import { BoardController } from './boards/boards.controller';
 import { BoardService } from './boards/boards.service';
@@ -26,6 +24,8 @@ import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
 import {BoardModule} from "./boards/boards.module";
+import { UserRepository } from './users/user.repository';
+
 
 @Module({
   imports: [
@@ -54,6 +54,7 @@ import {BoardModule} from "./boards/boards.module";
     CategoryRepository,
     AdminService,
     TonicCategoryRepository,
+    UserRepository,
   ],
 })
 export class AppModule {}

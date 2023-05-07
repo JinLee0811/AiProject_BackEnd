@@ -21,7 +21,8 @@ export class UserService {
     @Inject(RefreshTokenService)
     private readonly refreshTokenService: RefreshTokenService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) // private readonly redisService: RedisService,
+  {}
   //회원가입
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, nickname } = createUserDto;
@@ -77,7 +78,7 @@ export class UserService {
     }
 
     // Access Token 발급
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, isAdmin: user.is_admin };
     const access_token = this.jwtService.sign(payload);
 
     // Refresh Token 생성 및 저장
@@ -95,11 +96,14 @@ export class UserService {
   //acess token(AT) 만료시 새로운 AT발급
   async refreshAccessToken(refreshToken: string): Promise<string> {
     // Refresh Token 검증
-    const decodedToken = this.jwtService.verify(refreshToken);
+    // const decodedToken = this.jwtService.verify(refreshToken);
+    console.log(refreshToken);
+    const decodedToken = await this.jwtService.verifyAsync(refreshToken);
+    console.log(decodedToken);
     const userId = decodedToken.sub;
 
     // 사용자 조회
-    const user = await this.userRepository.findOne(userId);
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
     }
@@ -111,14 +115,16 @@ export class UserService {
 
     return accessToken;
   }
-
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (user && (await compare(password, user.password))) {
-      // password 필드를 제외한 user 객체 전체를 반환합니다.
-      const { password, ...result } = user;
-      return user;
-    }
-    return null;
-  }
+  // async addToBlacklist(token: string): Promise<void> {
+  //   const payload = this.jwtService.decode(token);
+  //   const jti = payload['jti'];
+  //   await this.redisService
+  //     .getClient()
+  //     .set(
+  //       jti,
+  //       'blacklisted',
+  //       'EX',
+  //       this.jwtService.decode(token)['exp'] - Date.now() / 1000,
+  //     );
+  // }
 }
