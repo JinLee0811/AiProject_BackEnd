@@ -12,6 +12,8 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Board } from './board.entity';
@@ -21,6 +23,10 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { BoardStatus } from './board-status.enum';
 import { multerOptions } from 'src/utils/multer.options';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/users/get-user.decorator';
+import { User } from 'src/users/user.entity';
+
 @Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
@@ -36,12 +42,13 @@ export class BoardController {
   }
   //게시글 생성
   @Post()
+  //@UseGuards(AuthGuard('local'))
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async createBoard(
     @Body() createBoardDto: CreateBoardDto,
     @UploadedFile() file,
+    // @Req() req,
   ): Promise<Board> {
-    //console.log(file);
     const board = await this.boardService.createBoard(
       createBoardDto,
       file?.location,
