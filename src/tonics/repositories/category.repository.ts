@@ -44,7 +44,7 @@ export class CategoryRepository extends Repository<Category> {
     category.name = name
 
     await this.save(category)
-
+    return category
   }
 
   // deleteCategory: 영양제 카테고리 삭제

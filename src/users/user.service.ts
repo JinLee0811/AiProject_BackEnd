@@ -78,7 +78,7 @@ export class UserService {
     }
 
     // Access Token 발급
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, isAdmin: user.is_admin };
     const access_token = this.jwtService.sign(payload);
 
     // Refresh Token 생성 및 저장

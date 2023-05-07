@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardModule } from './boards/boards.module';
 import { typeORMConfig } from './configs/typeorm.config';
 
 import { BoardController } from './boards/boards.controller';
@@ -18,13 +17,15 @@ import { AdminModule } from './admin/admin.module';
 import { AdminController } from './admin/admin.controller';
 import { TonicsService } from './tonics/tonics.service';
 import { TonicRepository } from './tonics/repositories/tonic.repository';
-import { CategoryRepository } from './tonics/repositories/catetory.repository';
+import { CategoryRepository } from './tonics/repositories/category.repository';
 import { AdminService } from './admin/admin.service';
 import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
+import {BoardModule} from "./boards/boards.module";
 import { UserRepository } from './users/user.repository';
+
 
 @Module({
   imports: [
