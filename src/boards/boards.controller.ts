@@ -30,42 +30,53 @@ import { User } from 'src/users/user.entity';
 @Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
-
+  //게시글전체 조회
   @Get()
   async getAllBoards(): Promise<Board[]> {
     return await this.boardService.getAllBoards();
   }
-
-  @Get(':id')
+  //게시글 상세조회
+  @Get('/detail/:id')
   async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
     return await this.boardService.getBoardById(id);
   }
+  //나의 게시글 조회
+  @Get('/myboard')
+  @UseGuards(AuthGuard())
+  async getMyBoard(@GetUser() user: User): Promise<Board[]> {
+    return await this.boardService.getMyBoards(user);
+  }
   //게시글 생성
   @Post()
-  //@UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async createBoard(
     @Body() createBoardDto: CreateBoardDto,
+    @GetUser() user: User,
     @UploadedFile() file,
     // @Req() req,
   ): Promise<Board> {
     const board = await this.boardService.createBoard(
       createBoardDto,
+      user,
       file?.location,
     );
     return board;
   }
   //게시글 수정
   @Patch(':id')
+  @UseGuards(AuthGuard())
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async updateBoard(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBoardDto: UpdateBoardDto,
+    @GetUser() user: User,
     @UploadedFile() file,
   ): Promise<Board> {
     return await this.boardService.updateBoard(
       id,
       updateBoardDto,
+      user,
       file?.location,
     );
   }
@@ -81,10 +92,12 @@ export class BoardController {
   //게시글 삭제
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard())
   async deleteBoard(
     @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
   ): Promise<{ message: string }> {
-    const message = await this.boardService.deleteBoard(id);
+    const message = await this.boardService.deleteBoard(id, user);
     return { message };
   }
 }

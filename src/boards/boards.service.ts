@@ -11,6 +11,8 @@ import { BoardStatus } from './board-status.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from 'src/users/user.entity';
+import { UserRepository } from 'src/users/user.repository';
+import { arrayUnique } from 'class-validator';
 
 @Injectable()
 export class BoardService {
@@ -18,27 +20,36 @@ export class BoardService {
   constructor(
     @InjectRepository(BoardRepository)
     private boardRepository: BoardRepository,
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
   ) {}
 
-  createBoard(createBoardDto: CreateBoardDto, imageUrl?: string) {
+  createBoard(createBoardDto: CreateBoardDto, user: User, imageUrl?: string) {
     //const imageUrl = file.location;
     //return this.boardRepository.createBoard(createBoardDto, imageUrl);
 
     try {
-      return this.boardRepository.createBoard(createBoardDto, imageUrl);
+      return this.boardRepository.createBoard(createBoardDto, user, imageUrl);
     } catch (error) {
       throw new InternalServerErrorException('게시글 생성 실패');
     }
   }
-
+  //게시글 전체 조회
   async getAllBoards() {
     return await this.boardRepository.getAllBoards();
+  }
+  //나의 게시글 조회
+  async getMyBoards(user: User) {
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.user_id = :user_id', { user_id: user.id });
+    const board = await query.getMany();
+    return board;
   }
 
   async getBoardById(id: number) {
     const found = await this.boardRepository.getBoardById(id);
     if (!found) {
-      throw new NotFoundException(`Can't find Board with id ${id}`);
+      throw new NotFoundException(` ${id} 게시글을 찾을 수 없습니다.`);
     }
     return found;
   }
@@ -46,10 +57,16 @@ export class BoardService {
   async updateBoard(
     id: number,
     updateBoardDto: UpdateBoardDto,
+    user: User,
     imageUrl?: string,
   ) {
     try {
-      return this.boardRepository.updateBoard(id, updateBoardDto, imageUrl);
+      return this.boardRepository.updateBoard(
+        id,
+        updateBoardDto,
+        user,
+        imageUrl,
+      );
     } catch (error) {
       throw new InternalServerErrorException('게시글 수정 실패');
     }
@@ -59,15 +76,18 @@ export class BoardService {
     return this.boardRepository.updateBoardStatus(id, status);
   }
 
-  async deleteBoard(id: number): Promise<string> {
+  async deleteBoard(id: number, user: User): Promise<string> {
     if (!id) {
       throw new NotFoundException(`Invalid Board ID`);
     }
-
-    const result = await this.boardRepository.delete({ id });
+    const result = await this.boardRepository.delete({
+      id,
+      user: { id: user.id },
+    });
     if (result.affected === 0) {
-      throw new NotFoundException(`Can't find Board with id ${id}`);
+      throw new NotFoundException(`${id} 게시글을 찾을 수 없습니다.`);
     }
+
     return '삭제 완료';
   }
 }

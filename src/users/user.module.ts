@@ -11,7 +11,8 @@ import { RefreshTokenRepository } from './token.repository';
 import { RefreshToken } from './toeken.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -21,11 +22,12 @@ import { LocalStrategy } from './local.strategy';
       RefreshTokenRepository,
     ]),
     JwtModule.register({
-      secret: 'my-secret-key',
+      secret: process.env.SECRET_KEY, //토큰 생성시
       signOptions: { expiresIn: '1h' },
     }),
+
     PassportModule.register({
-      defaultStrategy: 'local',
+      defaultStrategy: 'jwt',
     }),
   ],
   providers: [
@@ -33,8 +35,11 @@ import { LocalStrategy } from './local.strategy';
     UserRepository,
     RefreshTokenRepository,
     RefreshTokenService,
-    LocalStrategy,
+    JwtStrategy,
+    // RedisService
   ],
   controllers: [UserController],
+
+  exports: [JwtStrategy, PassportModule],
 })
 export class UserModule {}

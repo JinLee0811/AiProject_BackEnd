@@ -24,6 +24,7 @@ import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
+import { UserRepository } from './users/user.repository';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { TonicCategoryRepository } from './tonics/repositories/tonic-category.re
     CategoryRepository,
     AdminService,
     TonicCategoryRepository,
+    UserRepository,
   ],
 })
 export class AppModule {}

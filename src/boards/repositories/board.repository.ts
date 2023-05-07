@@ -12,7 +12,11 @@ export class BoardRepository extends Repository<Board> {
     super(Board, dataSource.createEntityManager());
   }
   //게시글 생성
-  async createBoard(createBoardDto: CreateBoardDto, imageUrl?: string) {
+  async createBoard(
+    createBoardDto: CreateBoardDto,
+    user: User,
+    imageUrl?: string,
+  ) {
     const { title, content } = createBoardDto;
 
     const board = this.create({
@@ -20,6 +24,7 @@ export class BoardRepository extends Repository<Board> {
       content,
       image: imageUrl ?? null,
       status: BoardStatus.PUBLIC,
+      user,
     });
     await this.save(board);
     return board;
@@ -41,6 +46,7 @@ export class BoardRepository extends Repository<Board> {
   async updateBoard(
     id: number,
     updateBoardDto: UpdateBoardDto,
+    user: User,
     imageUrl?: string,
   ) {
     const { title, content, image } = updateBoardDto;
@@ -48,6 +54,7 @@ export class BoardRepository extends Repository<Board> {
 
     board.title = title;
     board.content = content;
+    board.user = user;
     //console.log('***********************' + board.updated_at);
 
     if (imageUrl !== undefined) {

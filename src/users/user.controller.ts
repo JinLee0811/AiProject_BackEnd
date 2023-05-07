@@ -1,9 +1,8 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Headers, Delete } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AuthGuard } from '@nestjs/passport';
-
+import { Req } from '@nestjs/common';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -12,7 +11,7 @@ export class UserController {
   async signUp(@Body() createUserDto: CreateUserDto) {
     return this.userService.signUp(createUserDto);
   }
-  @UseGuards(AuthGuard('local'))
+  //@UseGuards(AuthGuard('jwt'))
   @Post('/sign-in')
   async login(@Body() loginUserDto: LoginUserDto) {
     // const token = await this.userService.login(loginUserDto);
@@ -24,9 +23,15 @@ export class UserController {
     return { access_token, refresh_token };
   }
 
-  @Post('/refresh')
+  @Post('/access')
   async refreshAccessToken(@Body('refresh_token') refreshToken: string) {
     const accessToken = await this.userService.refreshAccessToken(refreshToken);
+
     return { access_token: accessToken };
   }
+
+  // @Delete('/logout')
+  // async logout(@Headers('authorization') token: string) {
+  //   await this.userService.addToBlacklist(token);
+  // }
 }
