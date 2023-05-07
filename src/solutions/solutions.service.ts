@@ -1,9 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SolutionRepository } from './solution.repository';
-// import { TorchTensor } from 'torchjs';
-// import fetch from 'node-fetch';
-// import sharp from 'sharp';
+import * as tf from '@tensorflow/tfjs-node';
+import { ScriptModule, TorchTensor } from 'torchjs';
+
+import fetch from 'node-fetch';
+import sharp from 'sharp';
 import * as fs from 'fs';
 const path = require('path');
 
@@ -20,7 +22,12 @@ export class SolutionsService {
     // 모델 로드
 
     // const modelData = fs.readFileSync('./model.pt');
-    // const model = new TorchTensor.ScriptModule(modelData);
+    // const model = new TorchTensor.loadModel(modelData);
+
+    // const modelPath = 'src/assets/baseline_1.ckpt';
+    // const modelData = fs.readFileSync(modelPath);
+    // const model = new ScriptModule(modelData);
+    //
     //
     // // 이미지 -> tensor 로드
     // const response = await fetch(fileUrl);

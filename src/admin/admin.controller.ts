@@ -42,7 +42,7 @@ export class AdminController {
   ) {
     // 요청: (param) 수정할 영양제 id, (body) 수정할 영양제 정보
     // 응답: 수정된 영양제 정보
-    // 이미지를 재첨부 하지 않을 시 어떻게 되는지 확인
+    // 이미지를 재첨부 하지 않을 시 원래 이미지의 경로가 오는지, 빈 값이 오는지 체크
 
     return await this.adminService.updateTonic(tonicId, file.location, updateTonicDto);
   }
@@ -51,7 +51,7 @@ export class AdminController {
   @Delete('tonics/:tonicId')
   async deleteTonic(@Param('tonicId', ParseIntPipe) tonicId: number) {
     // 요청: (param) 삭제할 영양제 id
-    // 응답: 성공 메시지 어떤 식으로 줄 것인지 상의
+    // 응답: 성공 메시지
     return await this.adminService.deleteTonic(tonicId);
   }
 
@@ -80,7 +80,10 @@ export class AdminController {
   @Delete('tonics/categories/:categoryId')
   async deleteCategory(@Param("categoryId", ParseIntPipe) categoryId:number) {
     // 요청: (param) 삭제할 카테고리 id
-    // 응답: 성공 메시지?
+    // 응답: 성공 메시지
+
+    // 카테고리 사용하고있는 영양제가 있으면, 오류 메시지 던져주기
+
     return await this.adminService.deleteCategory(categoryId);
   }
 }

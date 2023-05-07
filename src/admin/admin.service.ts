@@ -50,9 +50,16 @@ export class AdminService {
 
     const  {categoryIds} =  updateTonicDto
 
-    // 삭제, 수정 하기 전에 카테고리 테이블에 있는 카테고리인지 확인하는 로직 추가해야함
-    // ....
+    // 삭제, 수정 하기 전에 없는 카테고리가 들어오면 오류
+    await Promise.all(categoryIds.map(async categoryId => {
+      const category = await this.categoryRepository.getCategoryById(categoryId);
 
+      if (!category) {
+        throw new NotFoundException(`Category with id ${categoryId} does not exist`);
+      }
+      return category;
+    }));
+    
     // tonic_category 테이블에서 토닉 ID를 가진 row 모두 삭제
     await this.tonicCategoryRepository.deleteTonicCategoryByTonicId(tonicId)
 
@@ -72,6 +79,9 @@ export class AdminService {
     if (!tonicId) {
       throw new NotFoundException('Invalid tonic ID');
     }
+
+    // 영양제를 삭제하면 tonic_category에 있는 tonicId인 값들도 삭제
+    await this.tonicCategoryRepository.deleteTonicCategoryByTonicId(tonicId)
 
     return this.tonicRepository.deleteTonic(tonicId);
   }

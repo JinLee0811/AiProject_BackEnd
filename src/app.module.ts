@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardModule } from './boards/boards.module';
+// import { BoardModule } from './boards/boards.module';
 import { typeORMConfig } from './configs/typeorm.config';
+import { App } from 'electron';
 
-import { BoardController } from './boards/boards.controller';
-import { BoardService } from './boards/boards.service';
-import { BoardRepository } from './boards/repositories/board.repository';
+// import { BoardController } from './boards/boards.controller';
+// import { BoardService } from './boards/boards.service';
+// import { BoardRepository } from './boards/repositories/board.repository';
 
-import { CommentModule } from './comments/comment.module';
-import { UserModule } from './users/user.module';
+// import { CommentModule } from './comments/comment.module';
+// import { UserModule } from './users/user.module';
 import { SolutionsModule } from './solutions/solutions.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from './utils/multer.options';
@@ -28,23 +29,23 @@ import { TonicCategoryRepository } from './tonics/repositories/tonic-category.re
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
-    BoardModule,
+    // BoardModule,
     SolutionsModule,
     MulterModule.register(multerOptions('')),
     TonicsModule,
     AdminModule,
-    CommentModule,
-    UserModule,
+    // CommentModule,
+    // UserModule,
   ],
   controllers: [
-    BoardController,
+    // BoardController,
     TonicsController,
     SolutionsController,
     AdminController,
   ],
   providers: [
-    BoardService,
-    BoardRepository,
+    // BoardService,
+    // BoardRepository,
     SolutionsService,
     SolutionRepository,
     TonicsService,
