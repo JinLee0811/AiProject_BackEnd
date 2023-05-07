@@ -5,7 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Tonic } from "./entities/tonic.entity";
 import { Category } from "./entities/category.entity";
 import { TonicRepository } from "./repositories/tonic.repository";
-import { CategoryRepository } from "./repositories/catetory.repository";
+import { CategoryRepository } from "./repositories/category.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tonic, Category])],

@@ -1,7 +1,7 @@
 import { Injectable, Param } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TonicRepository } from "./repositories/tonic.repository";
-import { CategoryRepository } from "./repositories/catetory.repository";
+import { CategoryRepository } from "./repositories/category.repository";
 
 @Injectable()
 export class TonicsService {

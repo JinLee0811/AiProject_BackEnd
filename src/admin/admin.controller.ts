@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post, UploadedFile, UseInterceptors,
+  UseGuards
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateTonicDto } from './dto/create-tonic.dto';
@@ -14,6 +15,7 @@ import {CreateCategoryDto} from "./dto/create-category.dto";
 import {UpdateCategoryDto} from "./dto/update-category.dto";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {multerOptions} from "../utils/multer.options";
+import {AdminAuthGuard} from "../users/admin-auth.guard"
 
 @Controller('admin')
 export class AdminController {
@@ -59,6 +61,7 @@ export class AdminController {
 
   // createCategory: 영양체 카테고리 추가
   @Post('tonics/category')
+  @UseGuards(AdminAuthGuard)
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     // 요청: (body) 카테고리 정보
     // 응답: 생성된 카테고리 정보

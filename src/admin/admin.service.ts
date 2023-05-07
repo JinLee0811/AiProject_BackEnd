@@ -9,7 +9,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { TonicRepository } from '../tonics/repositories/tonic.repository';
 import { CreateTonicDto } from './dto/create-tonic.dto';
-import { CategoryRepository } from '../tonics/repositories/catetory.repository';
+import { CategoryRepository } from '../tonics/repositories/category.repository';
 import { UpdateTonicDto } from './dto/update-tonic.dto';
 import {CreateCategoryDto} from "./dto/create-category.dto";
 import {UpdateCategoryDto} from "./dto/update-category.dto";
