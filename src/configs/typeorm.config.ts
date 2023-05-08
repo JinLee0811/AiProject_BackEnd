@@ -12,4 +12,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
+  charset: 'utf8mb4',
+  timezone: 'z',
+  dateStrings: true, //날짜 뒤에 스트링 지움
 };

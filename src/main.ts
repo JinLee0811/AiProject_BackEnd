@@ -11,6 +11,6 @@ async function bootstrap() {
   const validationPipe = new ValidationPipe();
   app.useGlobalPipes(validationPipe);
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();

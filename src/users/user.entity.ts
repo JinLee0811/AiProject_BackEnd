@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Board } from 'src/boards/board.entity';
+import { Comment } from 'src/comments/comment.entity';
 import { RefreshToken } from './toeken.entity';
 import {Solution} from "../solutions/entities/solution.entity";
 import {Category} from "../tonics/entities/category.entity";
@@ -44,13 +45,14 @@ export class User extends BaseEntity {
   })
   deleted_at: Date;
 
+  // User와 RefreshToken의 일대다(OneToMany) 관계를 정의
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refresh_tokens: RefreshToken[];
+
   // User와 Board의 일대다(OneToMany) 관계를 정의
   @OneToMany(() => Board, (board) => board.user)
   boards: Board[];
 
-  // User와 RefreshToken의 일대다(OneToMany) 관계를 정의
-  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
-  refresh_tokens: RefreshToken[];
 
   // User와 Solution의 다대다(ManyToMany) 관계를 정의
   @ManyToMany(() => Solution, solution => solution.users)
@@ -60,4 +62,7 @@ export class User extends BaseEntity {
     inverseJoinColumn: { name: 'solution_id', referencedColumnName: 'id' }
   })
   solutions: Solution[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }
