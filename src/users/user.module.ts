@@ -7,7 +7,7 @@ import { Board } from 'src/boards/board.entity';
 import { UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { RefreshTokenService } from './token.service';
-import { RefreshTokenRepository } from './token.repository';
+import { RefreshTokenRepository } from './token/token.repository';
 import { RefreshToken } from './toeken.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
