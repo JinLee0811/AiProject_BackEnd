@@ -25,6 +25,7 @@ export class AdminController {
 
   // createTonic: 영양제 추가
   @Post('/tonics')
+  @UseGuards(AdminAuthGuard)
   @UseInterceptors(FileInterceptor("image", multerOptions('tonic')))
   async createTonic(@UploadedFile() file,
                     @Body() createTonicDto: CreateTonicDto) {
@@ -36,6 +37,7 @@ export class AdminController {
 
   // updateTonic: 영양제 수정
   @Patch('tonics/:tonicId')
+  @UseGuards(AdminAuthGuard)
   @UseInterceptors(FileInterceptor("image", multerOptions('tonic')))
   async updateTonic(
       @UploadedFile() file,
@@ -51,6 +53,7 @@ export class AdminController {
 
   // deleteTonic: 영양제 삭제
   @Delete('tonics/:tonicId')
+  @UseGuards(AdminAuthGuard)
   async deleteTonic(@Param('tonicId', ParseIntPipe) tonicId: number) {
     // 요청: (param) 삭제할 영양제 id
     // 응답: 성공 메시지
@@ -70,6 +73,7 @@ export class AdminController {
 
   // updateCategory: 영양제 카테고리 수정
   @Patch('tonics/categories/:categoryId')
+  @UseGuards(AdminAuthGuard)
   async updateCategory(
       @Param('categoryId', ParseIntPipe) categoryId: number,
       @Body() updateCategoryDto: UpdateCategoryDto,
@@ -81,6 +85,7 @@ export class AdminController {
 
   // deleteCategory: 영양제 카테고리 삭제
   @Delete('tonics/categories/:categoryId')
+  @UseGuards(AdminAuthGuard)
   async deleteCategory(@Param("categoryId", ParseIntPipe) categoryId:number) {
     // 요청: (param) 삭제할 카테고리 id
     // 응답: 성공 메시지

@@ -14,30 +14,47 @@ export class TonicRepository extends Repository<Tonic> {
   // getTonics: 영양제 전체 조회
   async getTonics() {
     // tonic 테이블 조회
-    const tonics = await this.find();
+    const tonics = await this.createQueryBuilder('tonic')
+        .leftJoinAndSelect('tonic.categories', 'category')   // 첫 번째 인자로는 조인할 엔티티의 프로퍼티 이름, 두 번째 인자로는 조인한 엔티티에 대한 별칭
+        .getMany();
     return tonics
   }
+
+  // getTonicById: 영양제 상세 조회
+  async getTonicById(tonic_id: number) {
+    const tonic = await this.createQueryBuilder('tonic')
+        .leftJoinAndSelect("tonic.categories", "category")
+        .where('tonic.id = :tonic_id', {tonic_id})
+        .getOne()
+    return tonic;
+  }
+
 
   // getTonicsByCategory: 카테고리 별 영양제 조회
   async getTonicsByCategory(category_id: number) {
-    // tonic, tonic_category 테이블 join
     const tonics = await this.createQueryBuilder('tonic')
-      .leftJoinAndSelect('tonic.categories', 'category')   // 첫 번째 인자로는 조인할 엔티티의 프로퍼티 이름, 두 번째 인자로는 조인한 엔티티에 대한 별칭
-      .where('category.id = :category_id', {category_id}) // 카테고리 테이블의 id가 categoryId인 데이터를 찾음
-      .getMany();
+        .leftJoinAndSelect('tonic.categories', 'category') // 첫 번째 인자로는 조인할 엔티티의 프로퍼티 이름, 두 번째 인자로는 조인한 엔티티에 대한 별칭
+        .leftJoinAndSelect('tonic.tonicCategories', 'tonicCategory')
+        .leftJoinAndSelect('tonicCategory.category', 'category2')
+        .where('tonicCategory.tonicId = tonic.id')
+        .andWhere('category2.id = :category_id', { category_id })
+        .getMany();
+
     return tonics
   }
 
-  async createTonic(tonic_img, createTonicDto: CreateTonicDto) {
-    const {name, description} = createTonicDto
+  async createTonic(image, createTonicDto: CreateTonicDto) {
+    const {name, description, short_description} = createTonicDto
     const tonic = this.create({
       name,
       description,
-      tonic_img
+      short_description,
+      image
     })
     await this.save(tonic)
     return tonic
   }
+
 
   // updateTonic: 영양제 수정
   async updateTonic(tonicId, tonicImg: string, updateTonicDto: UpdateTonicDto) {
@@ -50,7 +67,7 @@ export class TonicRepository extends Repository<Tonic> {
 
     tonic.name = name
     tonic.description = description
-    tonic.tonic_img = tonicImg
+    tonic.image = tonicImg
 
     await this.save(tonic)
 

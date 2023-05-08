@@ -4,8 +4,6 @@ import { Category } from './category.entity';
 
 @Entity({name: "tonic_category"})
 export class TonicCategory {
-    @PrimaryGeneratedColumn()
-    id: number;
 
     @ManyToOne(() => Tonic, tonic => tonic.categories)
     tonic: Tonic;
@@ -13,20 +11,10 @@ export class TonicCategory {
     @ManyToOne(() => Category, category => category.tonics)
     category: Category;
 
-    @Column()
+    @PrimaryColumn()
     tonicId: number
 
     @Column()
     categoryId: number
 
-    @Column({
-        type: 'timestamp',
-
-        default: () => 'CURRENT_TIMESTAMP',
-        onUpdate: 'CURRENT_TIMESTAMP',
-    })
-    updatedAt: Date
-
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date
 }

@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { Category } from "./category.entity";
 // import { JoinTable } from "typeorm/browser";
 import { JoinTable } from "typeorm"
+import {TonicCategory} from "./tonic-category.entity";
 
 @Entity()
 export class Tonic extends BaseEntity {
@@ -15,7 +16,10 @@ export class Tonic extends BaseEntity {
   description: string;
 
   @Column()
-  tonic_img: string;
+  short_description:string;
+
+  @Column()
+  image: string;
 
   @Column({
     type: 'timestamp',
@@ -27,6 +31,9 @@ export class Tonic extends BaseEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @OneToMany(() => TonicCategory, tonicCategory => tonicCategory.tonic)
+  tonicCategories: TonicCategory[];
 
   @ManyToMany(() => Category, category => category.tonics)
   @JoinTable({

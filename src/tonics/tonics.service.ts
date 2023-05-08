@@ -17,6 +17,11 @@ export class TonicsService {
     return await this.tonicRepository.getTonics();
   }
 
+  // getTonicById: 영양제 상세 조회
+  async getTonicById(tonicId: number) {
+    return await this.tonicRepository.getTonicById(tonicId);
+  }
+
   // getTonicsByCategory: 카테고리 별 영양제 조회
   async getTonicsByCategory(categoryId: number) {
     return await this.tonicRepository.getTonicsByCategory(categoryId);
@@ -24,7 +29,6 @@ export class TonicsService {
 
   // getCategories: 영양제 카테고리 조회
   async getCategories() {
-    console.log("?")
     return await this.categoryRepository.getCategories()
   }
 }

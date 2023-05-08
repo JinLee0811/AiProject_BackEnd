@@ -9,5 +9,8 @@ export class UpdateTonicDto {
   description: string;
 
   @IsNotEmpty()
+  short_description: string;
+
+  @IsNotEmpty()
   categoryIds: []
 }

@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {User} from "../../users/user.entity";
+import {Tonic} from "../../tonics/entities/tonic.entity";
 
 @Entity()
 export class Solution extends BaseEntity {
@@ -9,10 +11,10 @@ export class Solution extends BaseEntity {
   disease_name: string;
 
   @Column()
-  cropName: string;
+  crop_name: string;
 
   @Column()
-  diseaseSolution: string;
+  disease_solution: string;
 
 
   @Column({
@@ -25,4 +27,7 @@ export class Solution extends BaseEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @ManyToMany(() => User, user => user.solutions)
+  users: User[];
 }

@@ -23,16 +23,23 @@ export class TonicsController {
     return await this.tonicsService.getTonics()
   }
 
+  // getTonicById: 영양제 상세 조회
+  @Get("/:tonicId")
+  async getTonicById(@Param('tonicId', ParseIntPipe) tonicId: number) {
+    // 요청: 상세 조회 할 tonicId
+    //응답: id가 tonicId인 영양제 정보
+    return await this.tonicsService.getTonicById(tonicId);
+  }
+
   // getCategories: 영양제 카테고리 조회
   @Get("/categories")
   async getCategories() {
     // 응답: 전체 카테고리 정보
-    console.log("?")
     return await this.tonicsService.getCategories()
   }
 
   // getTonicsByCategory: 카테고리 별 영양제 조회
-  @Get("/:categoryId")
+  @Get("categories/:categoryId")
   async getTonicsByCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
     // 요청: (param) categoryId
     // 응답: 카테고리 별 영양제 정보

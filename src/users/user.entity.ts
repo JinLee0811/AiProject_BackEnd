@@ -1,12 +1,14 @@
 import {
   BaseEntity,
   Column,
-  Entity,
+  Entity, JoinTable, ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Board } from 'src/boards/board.entity';
 import { RefreshToken } from './toeken.entity';
+import {Solution} from "../solutions/entities/solution.entity";
+import {Category} from "../tonics/entities/category.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -49,4 +51,13 @@ export class User extends BaseEntity {
   // User와 RefreshToken의 일대다(OneToMany) 관계를 정의
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refresh_tokens: RefreshToken[];
+
+  // User와 Solution의 다대다(ManyToMany) 관계를 정의
+  @ManyToMany(() => Solution, solution => solution.users)
+  @JoinTable({
+    name: "user_problem",
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'solution_id', referencedColumnName: 'id' }
+  })
+  solutions: Solution[];
 }

@@ -27,6 +27,8 @@ export class CategoryRepository extends Repository<Category> {
   }
 
 
+
+
   // createCategory: 영양체 카테고리 추가
   async createCategory(createCategoryDto: CreateCategoryDto) {
     const {name} = createCategoryDto
