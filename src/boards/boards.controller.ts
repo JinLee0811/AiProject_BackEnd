@@ -14,7 +14,6 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Board } from './board.entity';
@@ -41,12 +40,14 @@ export class BoardController {
   async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
     return await this.boardService.getBoardById(id);
   }
+
   //나의 게시글 조회
   @Get('/myboard')
   @UseGuards(AuthGuard())
   async getMyBoard(@GetUser() user: User): Promise<Board[]> {
     return await this.boardService.getMyBoards(user);
   }
+
   //게시글 생성
   @Post()
   @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
@@ -55,7 +56,6 @@ export class BoardController {
     @Body() createBoardDto: CreateBoardDto,
     @GetUser() user: User,
     @UploadedFile() file,
-    // @Req() req,
   ): Promise<Board> {
     const board = await this.boardService.createBoard(
       createBoardDto,

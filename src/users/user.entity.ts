@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Board } from 'src/boards/board.entity';
+import { Comment } from 'src/comments/comment.entity';
 import { RefreshToken } from './toeken.entity';
 
 @Entity()
@@ -42,11 +43,13 @@ export class User extends BaseEntity {
   })
   deleted_at: Date;
 
+  // User와 RefreshToken의 일대다(OneToMany) 관계를 정의
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+  refresh_tokens: RefreshToken[];
   // User와 Board의 일대다(OneToMany) 관계를 정의
   @OneToMany(() => Board, (board) => board.user)
   boards: Board[];
 
-  // User와 RefreshToken의 일대다(OneToMany) 관계를 정의
-  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
-  refresh_tokens: RefreshToken[];
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

@@ -1,6 +1,7 @@
 //boards.service.ts
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -45,12 +46,9 @@ export class BoardService {
     const board = await query.getMany();
     return board;
   }
-
+  //게시글 상세 조회
   async getBoardById(id: number) {
     const found = await this.boardRepository.getBoardById(id);
-    if (!found) {
-      throw new NotFoundException(` ${id} 게시글을 찾을 수 없습니다.`);
-    }
     return found;
   }
 
@@ -77,17 +75,6 @@ export class BoardService {
   }
 
   async deleteBoard(id: number, user: User): Promise<string> {
-    if (!id) {
-      throw new NotFoundException(`Invalid Board ID`);
-    }
-    const result = await this.boardRepository.delete({
-      id,
-      user: { id: user.id },
-    });
-    if (result.affected === 0) {
-      throw new NotFoundException(`${id} 게시글을 찾을 수 없습니다.`);
-    }
-
-    return '삭제 완료';
+    return this.boardRepository.deleteBoard(id, user);
   }
 }
