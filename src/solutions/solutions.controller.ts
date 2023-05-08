@@ -47,7 +47,7 @@ export class SolutionsController {
   @UseGuards(AuthGuard('jwt'))
   deleteSolutionsById(@Param() solutionId: number) {
     // 요청: 삭제할 해결첵 id
-    // 테스트
+    // 테스트2
   }
 
 }
