@@ -1,12 +1,15 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SolutionRepository } from './solution.repository';
+import { SolutionRepository } from './repositories/solution.repository';
 import * as tf from '@tensorflow/tfjs-node';
 import { ScriptModule, TorchTensor } from 'torchjs';
 
 import fetch from 'node-fetch';
 import sharp from 'sharp';
 import * as fs from 'fs';
+import {UserProblemRepository} from "./repositories/user-problem.repository";
+import {CreateUsersolutionDto} from "./dto/create-Usersolution.dto";
+import {UserRepository} from "../users/user.repository";
 const path = require('path');
 
 @Injectable()
@@ -14,6 +17,8 @@ export class SolutionsService {
   constructor(
     @InjectRepository(SolutionRepository)
     private solutionRepository: SolutionRepository,
+    private userRepository: UserRepository,
+    private userProblemRepository: UserProblemRepository
   ) {}
 
   // getSolutionByPredict: 질병 예측 및 진단 서비스
@@ -50,16 +55,33 @@ export class SolutionsService {
     // console.log(result)
 
     // 예측된 diseaseId를 레포지토리에 넘겨 db에서 해결책 받아옴
-    const solution = await this.solutionRepository.getSolutionByPredict(1);
+    const solution = await this.solutionRepository.getSolutionById(1);
     return { ...solution, crop_img: fileUrl };
   }
 
-  // createSolutions: (마이페이지) 해결책 자장
-  async createSolution() {}
+  // createSolutions: (마이페이지) 유저해결책 자장
+  async createUserSolution(userId:number, createUserSolutionDto: CreateUsersolutionDto) {
+    // userProblem 테이블에 userId, solutionId, image, resolved_at 저장
+    await this.userProblemRepository.createUserSolution(userId, createUserSolutionDto)
 
-  // getSolutions: (마이페이지) 해결책 조회
-  async getSolutions() {}
+    // id가 userId인 user 조회
+    const user = await this.userRepository.getUserById(userId)
 
-  // deleteSolutionsById: (마이페이지) 해결책 삭제
-  async deleteSolutionById() {}
+    // id가 solutionId인 solution 조회
+    const {solutionId} = createUserSolutionDto
+    const solution = await this.solutionRepository.getSolutionById(solutionId)
+
+    // 저장된 user, solution 정보 반환
+    return {user, solution}
+  }
+
+  // getSolutions: (마이페이지) 유저해결책 조회
+  async getUserSolutions(userId:number) {
+    return await this.userProblemRepository.getUserSolutions(userId)
+  }
+
+  // deleteSolutionsById: (마이페이지) 유저해결책 삭제
+  async deleteUserSolutionById(userSolutionId: number) {
+    return await this.userProblemRepository.deleteUserSolutionById(userSolutionId)
+  }
 }

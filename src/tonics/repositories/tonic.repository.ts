@@ -43,6 +43,7 @@ export class TonicRepository extends Repository<Tonic> {
     return tonics
   }
 
+  // createTonic: 영양제 추가
   async createTonic(image, createTonicDto: CreateTonicDto) {
     const {name, description, short_description} = createTonicDto
     const tonic = this.create({

@@ -21,10 +21,11 @@ import { CategoryRepository } from './tonics/repositories/category.repository';
 import { AdminService } from './admin/admin.service';
 import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
-import { SolutionRepository } from './solutions/solution.repository';
+import { SolutionRepository } from './solutions/repositories/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
 import {BoardModule} from "./boards/boards.module";
 import { UserRepository } from './users/user.repository';
+import {UserProblemRepository} from "./solutions/repositories/user-problem.repository";
 
 
 @Module({
@@ -37,12 +38,14 @@ import { UserRepository } from './users/user.repository';
     AdminModule,
     CommentModule,
     UserModule,
+      SolutionsModule
   ],
   controllers: [
     BoardController,
     TonicsController,
     SolutionsController,
     AdminController,
+      SolutionsController
   ],
   providers: [
     BoardService,
@@ -55,6 +58,8 @@ import { UserRepository } from './users/user.repository';
     AdminService,
     TonicCategoryRepository,
     UserRepository,
+      SolutionRepository,
+      UserProblemRepository
   ],
 })
 export class AppModule {}

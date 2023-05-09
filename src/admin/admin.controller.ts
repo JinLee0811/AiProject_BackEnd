@@ -29,7 +29,6 @@ export class AdminController {
   @UseInterceptors(FileInterceptor("image", multerOptions('tonic')))
   async createTonic(@UploadedFile() file,
                     @Body() createTonicDto: CreateTonicDto) {
-    // 이미지 전용 파이프를 만들어야 하는지 고민
     // 요청: (body) 영양제 정보
     // 응답: 생성된 영양제 정보
     return await this.adminService.createTonic(file.location, createTonicDto);
@@ -46,7 +45,7 @@ export class AdminController {
   ) {
     // 요청: (param) 수정할 영양제 id, (body) 수정할 영양제 정보
     // 응답: 수정된 영양제 정보
-    // 이미지를 재첨부 하지 않을 시 원래 이미지의 경로가 오는지, 빈 값이 오는지 체크
+    // 이미지를 재첨부 하지 않을 시 원래 이미지의 경로가 오는지 빈 값이 오는지 체크
 
     return await this.adminService.updateTonic(tonicId, file.location, updateTonicDto);
   }
