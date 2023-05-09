@@ -23,9 +23,10 @@ import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
-import {BoardModule} from "./boards/boards.module";
+import { BoardModule } from './boards/boards.module';
 import { UserRepository } from './users/user.repository';
-
+import { PassportModule } from '@nestjs/passport';
+import { RefreshTokenRepository } from './users/token/token.repository';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UserRepository } from './users/user.repository';
     AdminModule,
     CommentModule,
     UserModule,
+    PassportModule,
   ],
   controllers: [
     BoardController,
@@ -55,6 +57,7 @@ import { UserRepository } from './users/user.repository';
     AdminService,
     TonicCategoryRepository,
     UserRepository,
+    RefreshTokenRepository,
   ],
 })
 export class AppModule {}

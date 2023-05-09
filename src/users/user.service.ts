@@ -12,17 +12,21 @@ import { hash, compare } from 'bcrypt';
 
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshTokenService } from './token.service';
+import { RefreshTokenService } from './token/token.service';
+import { RefreshTokenRepository } from './token/token.repository';
 
 @Injectable()
 export class UserService {
   constructor(
+    // private userRepository: UserRepository,
+    // @Inject(RefreshTokenService)
+    // private readonly refreshTokenService: RefreshTokenService,
+    // private readonly jwtService: JwtService,
     private userRepository: UserRepository,
-    @Inject(RefreshTokenService)
+    private refreshTokenRepository: RefreshTokenRepository, // 추가된 코드
     private readonly refreshTokenService: RefreshTokenService,
     private readonly jwtService: JwtService,
-  ) // private readonly redisService: RedisService,
-  {}
+  ) {}
   //회원가입
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, nickname } = createUserDto;
@@ -74,7 +78,9 @@ export class UserService {
 
     const isPasswordValid = await compare(password, user.password);
     if (!user || !isPasswordValid) {
-      throw new Error('유저를 찾을 수 없거나 비밀번호가 일치하지 않습니다.');
+      throw new UnauthorizedException(
+        '유저를 찾을 수 없거나 비밀번호가 일치하지 않습니다.',
+      );
     }
 
     // Access Token 발급
@@ -96,14 +102,21 @@ export class UserService {
   //acess token(AT) 만료시 새로운 AT발급
   async refreshAccessToken(refreshToken: string): Promise<string> {
     // Refresh Token 검증
-    // const decodedToken = this.jwtService.verify(refreshToken);
-    console.log(refreshToken);
-    const decodedToken = await this.jwtService.verifyAsync(refreshToken);
-    console.log(decodedToken);
-    const userId = decodedToken.sub;
+    // Refresh Token 검증
+    const refreshTokenEntity = await this.refreshTokenRepository.findOne({
+      where: { refresh_token: refreshToken },
+      relations: ['user'],
+    });
 
+    if (!refreshTokenEntity) {
+      throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
+    }
+
+    if (refreshTokenEntity.expire_at.getTime() < Date.now()) {
+      throw new UnauthorizedException('리프레시 토큰이 만료되었습니다.');
+    }
     // 사용자 조회
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = refreshTokenEntity.user;
     if (!user) {
       throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
     }
@@ -115,16 +128,33 @@ export class UserService {
 
     return accessToken;
   }
-  // async addToBlacklist(token: string): Promise<void> {
-  //   const payload = this.jwtService.decode(token);
-  //   const jti = payload['jti'];
-  //   await this.redisService
-  //     .getClient()
-  //     .set(
-  //       jti,
-  //       'blacklisted',
-  //       'EX',
-  //       this.jwtService.decode(token)['exp'] - Date.now() / 1000,
-  //     );
-  // }
+
+  async signOut(userId: number): Promise<{ message: string }> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
+    }
+    const refreshToken = await this.refreshTokenRepository.findOne({
+      where: { user: { id: userId } },
+    });
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('리프레시 토큰이 유효하지 않습니다.');
+    }
+
+    await this.refreshTokenRepository.remove(refreshToken);
+
+    return { message: '로그아웃되었습니다.' };
+  }
+
+  async getAllUsers() {
+    return await this.userRepository.getAllUsers();
+  }
+
+  async deleteUser(userId: number) {
+    return await this.userRepository.deleteUser(userId);
+  }
 }

@@ -5,17 +5,21 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post, UploadedFile, UseInterceptors,
-  UseGuards
+  Post,
+  UploadedFile,
+  UseInterceptors,
+  UseGuards,
+  Get,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateTonicDto } from './dto/create-tonic.dto';
 import { UpdateTonicDto } from './dto/update-tonic.dto';
-import {CreateCategoryDto} from "./dto/create-category.dto";
-import {UpdateCategoryDto} from "./dto/update-category.dto";
-import {FileInterceptor} from "@nestjs/platform-express";
-import {multerOptions} from "../utils/multer.options";
-import {AdminAuthGuard} from "../users/admin-auth.guard"
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from '../utils/multer.options';
+import { AdminAuthGuard } from '../users/admin-auth.guard';
+import { User } from 'src/users/user.entity';
 
 @Controller('admin')
 export class AdminController {
@@ -26,9 +30,11 @@ export class AdminController {
   // createTonic: 영양제 추가
   @Post('/tonics')
   @UseGuards(AdminAuthGuard)
-  @UseInterceptors(FileInterceptor("image", multerOptions('tonic')))
-  async createTonic(@UploadedFile() file,
-                    @Body() createTonicDto: CreateTonicDto) {
+  @UseInterceptors(FileInterceptor('image', multerOptions('tonic')))
+  async createTonic(
+    @UploadedFile() file,
+    @Body() createTonicDto: CreateTonicDto,
+  ) {
     // 이미지 전용 파이프를 만들어야 하는지 고민
     // 요청: (body) 영양제 정보
     // 응답: 생성된 영양제 정보
@@ -38,9 +44,9 @@ export class AdminController {
   // updateTonic: 영양제 수정
   @Patch('tonics/:tonicId')
   @UseGuards(AdminAuthGuard)
-  @UseInterceptors(FileInterceptor("image", multerOptions('tonic')))
+  @UseInterceptors(FileInterceptor('image', multerOptions('tonic')))
   async updateTonic(
-      @UploadedFile() file,
+    @UploadedFile() file,
     @Param('tonicId', ParseIntPipe) tonicId: number,
     @Body() updateTonicDto: UpdateTonicDto,
   ) {
@@ -48,7 +54,11 @@ export class AdminController {
     // 응답: 수정된 영양제 정보
     // 이미지를 재첨부 하지 않을 시 원래 이미지의 경로가 오는지, 빈 값이 오는지 체크
 
-    return await this.adminService.updateTonic(tonicId, file.location, updateTonicDto);
+    return await this.adminService.updateTonic(
+      tonicId,
+      file.location,
+      updateTonicDto,
+    );
   }
 
   // deleteTonic: 영양제 삭제
@@ -75,23 +85,38 @@ export class AdminController {
   @Patch('tonics/categories/:categoryId')
   @UseGuards(AdminAuthGuard)
   async updateCategory(
-      @Param('categoryId', ParseIntPipe) categoryId: number,
-      @Body() updateCategoryDto: UpdateCategoryDto,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+    @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     // 요청: (param) 수정할 카레고리 id, (body) 수정할 카테고리 정보
     // 응답: 수정된 카테고리 정보
-    return await this.adminService.updateCategory(categoryId, updateCategoryDto)
+    return await this.adminService.updateCategory(
+      categoryId,
+      updateCategoryDto,
+    );
   }
 
   // deleteCategory: 영양제 카테고리 삭제
   @Delete('tonics/categories/:categoryId')
   @UseGuards(AdminAuthGuard)
-  async deleteCategory(@Param("categoryId", ParseIntPipe) categoryId:number) {
+  async deleteCategory(@Param('categoryId', ParseIntPipe) categoryId: number) {
     // 요청: (param) 삭제할 카테고리 id
     // 응답: 성공 메시지
 
     // 카테고리 사용하고있는 영양제가 있으면, 오류 메시지 던져주기
 
     return await this.adminService.deleteCategory(categoryId);
+  }
+  //-------------------- 유저 관리  -------------------------
+  //유저 전체 조회
+  @Get('users')
+  async getAllUsers() {
+    return await this.adminService.getAllUsers();
+  }
+  //유저 삭제
+  @Delete('users/:userId')
+  async deleteUser(@Param('userId', ParseIntPipe) id: number) {
+    await this.adminService.deleteUser(id);
+    return { message: '유저 삭제 완료' };
   }
 }
