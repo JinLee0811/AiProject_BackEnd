@@ -3,8 +3,8 @@ import {User} from "../../users/user.entity";
 import {Solution} from "./solution.entity";
 
 
-@Entity({name: "tonic_category"})
-export class TonicCategory {
+@Entity({name: "user_problem"})
+export class UserProblem {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -15,10 +15,10 @@ export class TonicCategory {
     solution: Solution;
 
     @Column()
-    tonicId: number
+    userId: number
 
     @Column()
-    categoryId: number
+    solutionId: number
 
     @Column()
     image: string

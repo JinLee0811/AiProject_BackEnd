@@ -25,7 +25,7 @@ export class Tonic extends BaseEntity {
     type: 'timestamp',
 
     default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP'
   })
   updatedAt: Date;
 
