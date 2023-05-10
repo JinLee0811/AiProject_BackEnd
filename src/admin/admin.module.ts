@@ -8,15 +8,18 @@ import { Tonic } from '../tonics/entities/tonic.entity';
 import { Category } from '../tonics/entities/category.entity';
 import { TonicCategory } from '../tonics/entities/tonic-category.entity';
 import { TonicCategoryRepository } from '../tonics/repositories/tonic-category.repository';
+import { UserRepository } from 'src/users/user.repository';
+import { User } from 'src/users/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tonic, Category, TonicCategory])],
+  imports: [TypeOrmModule.forFeature([Tonic, Category, TonicCategory, User])],
   // controllers: [AdminController],
   providers: [
     AdminService,
     TonicRepository,
     CategoryRepository,
     TonicCategoryRepository,
+    UserRepository,
   ],
 })
 export class AdminModule {}

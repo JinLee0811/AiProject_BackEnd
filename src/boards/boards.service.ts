@@ -1,11 +1,5 @@
 //boards.service.ts
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';
@@ -13,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from 'src/users/user.entity';
 import { UserRepository } from 'src/users/user.repository';
-import { arrayUnique } from 'class-validator';
 
 @Injectable()
 export class BoardService {

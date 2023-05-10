@@ -1,8 +1,16 @@
-import { Body, Controller, Post, Headers, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Headers,
+  Delete,
+  Param,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { Req } from '@nestjs/common';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -11,8 +19,8 @@ export class UserController {
   async signUp(@Body() createUserDto: CreateUserDto) {
     return this.userService.signUp(createUserDto);
   }
-  //@UseGuards(AuthGuard('jwt'))
-  @Post('/sign-in')
+
+  @Post('/signin')
   async login(@Body() loginUserDto: LoginUserDto) {
     // const token = await this.userService.login(loginUserDto);
     // return { token };
@@ -30,8 +38,9 @@ export class UserController {
     return { access_token: accessToken };
   }
 
-  // @Delete('/logout')
-  // async logout(@Headers('authorization') token: string) {
-  //   await this.userService.addToBlacklist(token);
-  // }
+  @Delete('/signout/:userId')
+  @HttpCode(HttpStatus.OK)
+  async signOut(@Param('userId') userId: number): Promise<{ message: string }> {
+    return await this.userService.signOut(userId);
+  }
 }
