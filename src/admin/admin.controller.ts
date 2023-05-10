@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   UseGuards,
   Get,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateTonicDto } from './dto/create-tonic.dto';
@@ -18,8 +20,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from '../utils/multer.options';
-import { AdminAuthGuard } from '../users/admin-auth.guard';
-import { User } from 'src/users/user.entity';
+import { AdminAuthGuard } from '../users/auth/admin-auth.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('admin')
 export class AdminController {
@@ -110,13 +112,26 @@ export class AdminController {
   //-------------------- 유저 관리  -------------------------
   //유저 전체 조회
   @Get('users')
+  @UseGuards(AdminAuthGuard)
   async getAllUsers() {
     return await this.adminService.getAllUsers();
   }
   //유저 삭제
   @Delete('users/:userId')
+  @UseGuards(AdminAuthGuard)
   async deleteUser(@Param('userId', ParseIntPipe) id: number) {
     await this.adminService.deleteUser(id);
     return { message: '유저 삭제 완료' };
+  }
+  //-------------------- 게시판  -------------------------
+  //게시글 삭제
+  @Delete('board/:boardId')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AdminAuthGuard)
+  async deleteBoardAdmin(
+    @Param('boardId', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
+    const message = await this.adminService.deleteBoardAdmin(id);
+    return { message };
   }
 }

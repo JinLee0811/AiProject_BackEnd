@@ -1,4 +1,4 @@
-import { RefreshToken } from './token.entity';
+import { RefreshToken } from '../entities/token.entity';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 

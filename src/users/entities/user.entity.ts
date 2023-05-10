@@ -9,9 +9,9 @@ import {
 } from 'typeorm';
 import { Board } from 'src/boards/board.entity';
 import { Comment } from 'src/comments/comment.entity';
-import { RefreshToken } from './token/token.entity';
-import { Solution } from '../solutions/entities/solution.entity';
-import { Category } from '../tonics/entities/category.entity';
+import { RefreshToken } from './token.entity';
+import { Solution } from '../../solutions/entities/solution.entity';
+import { Category } from '../../tonics/entities/category.entity';
 
 @Entity()
 export class User extends BaseEntity {

@@ -5,8 +5,8 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { User } from 'src/users/user.entity';
-import { UserRepository } from 'src/users/user.repository';
+import { User } from 'src/users/entities/user.entity';
+import { UserRepository } from 'src/users/repositories/user.repository';
 
 @Injectable()
 export class BoardService {

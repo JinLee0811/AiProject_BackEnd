@@ -9,8 +9,8 @@ import { IsNull, Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/crate-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Board } from '../boards/board.entity';
-import { User } from 'src/users/user.entity';
-import { UserRepository } from 'src/users/user.repository';
+import { User } from 'src/users/entities/user.entity';
+import { UserRepository } from 'src/users/repositories/user.repository';
 
 @Injectable()
 export class CommentService {

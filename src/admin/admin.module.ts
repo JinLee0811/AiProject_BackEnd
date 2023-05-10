@@ -8,8 +8,9 @@ import { Tonic } from '../tonics/entities/tonic.entity';
 import { Category } from '../tonics/entities/category.entity';
 import { TonicCategory } from '../tonics/entities/tonic-category.entity';
 import { TonicCategoryRepository } from '../tonics/repositories/tonic-category.repository';
-import { UserRepository } from 'src/users/user.repository';
-import { User } from 'src/users/user.entity';
+import { UserRepository } from 'src/users/repositories/user.repository';
+import { User } from 'src/users/entities/user.entity';
+import { BoardRepository } from 'src/boards/repositories/board.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tonic, Category, TonicCategory, User])],
@@ -20,6 +21,7 @@ import { User } from 'src/users/user.entity';
     CategoryRepository,
     TonicCategoryRepository,
     UserRepository,
+    BoardRepository,
   ],
 })
 export class AdminModule {}
