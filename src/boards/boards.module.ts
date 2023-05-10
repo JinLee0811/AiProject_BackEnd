@@ -6,7 +6,7 @@ import { BoardController } from './boards.controller';
 import { BoardService } from './boards.service';
 import { BoardRepository } from './repositories/board.repository';
 import { UserModule } from 'src/users/user.module';
-import { UserRepository } from 'src/users/user.repository';
+import { UserRepository } from 'src/users/repositories/user.repository';
 import { PassportModule } from '@nestjs/passport';
 @Module({
   imports: [TypeOrmModule.forFeature([Board]), UserModule, PassportModule],

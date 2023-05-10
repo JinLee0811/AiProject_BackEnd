@@ -9,7 +9,7 @@ import {
 import { DataSource, Repository } from 'typeorm';
 import { BoardStatus } from '../board-status.enum';
 import { UpdateBoardDto } from '../dto/update-board.dto';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class BoardRepository extends Repository<Board> {
@@ -37,7 +37,9 @@ export class BoardRepository extends Repository<Board> {
 
   //게시글 전체 조회
   async getAllBoards() {
-    return await this.find({ relations: ['user'] });
+    return await this.find({
+      relations: ['user', 'comments', 'comments.user'],
+    });
   }
 
   //특정 게시글 조회

@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   BaseEntity,
   Column,
@@ -15,8 +15,6 @@ export class Comment extends BaseEntity {
 
   @Column({ type: 'text' })
   content: string;
-
-  
 
   //대댓글
   @Column({ nullable: true })
@@ -42,7 +40,7 @@ export class Comment extends BaseEntity {
     nullable: true,
   })
   deleted_at: Date;
- // Board와 Comment 일대다(OneToMany) 관계를 정의
+  // Board와 Comment 일대다(OneToMany) 관계를 정의
   @ManyToOne(() => Board, (board) => board.comments)
   board: Board;
   // User와 Comment 일대다(OneToMany) 관계를 정의

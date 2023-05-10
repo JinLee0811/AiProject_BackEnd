@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RefreshToken } from './token.entity';
-import { User } from '../user.entity';
+import { RefreshToken } from '../entities/token.entity';
+import { User } from '../entities/user.entity';
 import * as crypto from 'crypto';
 
 @Injectable()

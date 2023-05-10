@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserService } from './user.service';
+import { UserService } from './services/user.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './get-user.decorator';
+import { GetUser } from './auth/get-user.decorator';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -71,5 +71,12 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
     return await this.userService.updateUserProfile(user.id, updateUserDto);
+  }
+
+  //회원 탈퇴
+  @Delete('/profile')
+  @UseGuards(AuthGuard())
+  async deleteUser(@GetUser() user: User): Promise<void> {
+    await this.userService.deleteUser(user.id);
   }
 }

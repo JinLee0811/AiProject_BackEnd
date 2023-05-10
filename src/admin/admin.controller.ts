@@ -20,8 +20,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from '../utils/multer.options';
-import { AdminAuthGuard } from '../users/admin-auth.guard';
-import { User } from 'src/users/user.entity';
+import { AdminAuthGuard } from '../users/auth/admin-auth.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('admin')
 export class AdminController {

@@ -24,12 +24,11 @@ import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/repositories/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
 import { BoardModule } from './boards/boards.module';
-import { UserRepository } from './users/user.repository';
-import {UserProblemRepository} from "./solutions/repositories/user-problem.repository";
-import {HttpService} from "@nestjs/axios";
-import {AXIOS_INSTANCE_TOKEN} from "@nestjs/axios/dist/http.constants";
-import axios from "axios";
-
+import { UserRepository } from './users/repositories/user.repository';
+import { UserProblemRepository } from './solutions/repositories/user-problem.repository';
+import { HttpService } from '@nestjs/axios';
+import { AXIOS_INSTANCE_TOKEN } from '@nestjs/axios/dist/http.constants';
+import axios from 'axios';
 
 @Module({
   imports: [
@@ -61,13 +60,13 @@ import axios from "axios";
     AdminService,
     TonicCategoryRepository,
     UserRepository,
-      SolutionRepository,
-      UserProblemRepository,
-      HttpService,
-  {
-    provide: AXIOS_INSTANCE_TOKEN,
-    useValue: axios.create(), // AXIOS_INSTANCE_TOKEN provider 추가
-  },
+    SolutionRepository,
+    UserProblemRepository,
+    HttpService,
+    {
+      provide: AXIOS_INSTANCE_TOKEN,
+      useValue: axios.create(), // AXIOS_INSTANCE_TOKEN provider 추가
+    },
   ],
 })
 export class AppModule {}
