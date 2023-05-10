@@ -116,4 +116,11 @@ export class BoardRepository extends Repository<Board> {
 
     return '삭제 완료';
   }
+
+  async deleteBoardAdmin(boardId: number) {
+    const board = await this.findOne({ where: { id: boardId } });
+    const result = await this.remove(board);
+
+    return '삭제 완료';
+  }
 }

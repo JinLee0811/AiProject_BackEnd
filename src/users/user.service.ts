@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
 import { hash, compare } from 'bcrypt';
 
@@ -14,6 +15,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './token/token.service';
 import { RefreshTokenRepository } from './token/token.repository';
+import { where } from '@tensorflow/tfjs-node';
 
 @Injectable()
 export class UserService {
@@ -156,5 +158,51 @@ export class UserService {
 
   async deleteUser(userId: number) {
     return await this.userRepository.deleteUser(userId);
+  }
+
+  // async getUserById(userId: number) {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //   });
+  //   return user;
+  // }
+  //나의 정보 조회
+  async getUserById(userId: number) {
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.nickname', 'user.email'])
+      .where('user.id = :userId', { userId });
+
+    return await query.getOne();
+  }
+  //나의 정보 수정
+  async updateUserProfile(userId: number, updateUserDto: UpdateUserDto) {
+    const { nickname, password } = updateUserDto;
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (
+      updateUserDto.password &&
+      updateUserDto.password !== updateUserDto.passwordConfirm
+    ) {
+      throw new BadRequestException(`비밀번호 값이 일치하지 않습니다.`);
+    }
+
+    if (password) {
+      const hashedPassword = await hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    //닉네임 중복 체크
+    const nickname_check = await this.userRepository.findOne({
+      where: { nickname },
+    });
+    if (nickname_check) {
+      throw new BadRequestException('사용중인 닉네임입니다.');
+    }
+
+    if (nickname !== undefined) {
+      user.nickname = nickname;
+    }
+
+    return await this.userRepository.save(user);
   }
 }

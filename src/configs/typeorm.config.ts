@@ -15,6 +15,5 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   charset: 'utf8mb4',
   timezone: 'z',
   dateStrings: true, //날짜 뒤에 스트링 지움
-  logging: ['query'],
   // logging: ['query'], //쿼리 로그 확인용
 };
