@@ -9,13 +9,11 @@ export class UserRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-<<<<<<< HEAD
   // getUserById: id로 user 찾기
-  async getUserById(userId:number) {
-    return this.findOne({where: {id: userId}})
+  async getUserById(userId: number) {
+    return this.findOne({ where: { id: userId } });
   }
 
-=======
   async getAllUsers(): Promise<User[]> {
     return await this.find({
       where: { deleted_at: IsNull() },
@@ -32,5 +30,4 @@ export class UserRepository extends Repository<User> {
     await user.save();
     // await this.remove(user); 유저 완전 삭제(hard-delete)
   }
->>>>>>> SJ
 }
