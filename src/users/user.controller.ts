@@ -11,6 +11,7 @@ import {
   Get,
   UseGuards,
   Patch,
+  Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,6 +20,8 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './auth/get-user.decorator';
+import { UpdateNicknameDto } from './dto/update-nickname.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -52,25 +55,35 @@ export class UserController {
   async signOut(@Param('userId') userId: number): Promise<{ message: string }> {
     return await this.userService.signOut(userId);
   }
+
   //나의 정보 조회
-  // @Get('/profile')
-  // @UseGuards(AuthGuard()) //로그인한 유저만 가능
-  // async getUserById(@Param('userId', ParseIntPipe) id: number): Promise<User> {
-  //   return await this.userService.getUserById(id);
-  // }
   @Get('/profile')
   @UseGuards(AuthGuard()) //로그인한 유저만 가능
   async getUserById(@GetUser() user: User): Promise<User> {
     return await this.userService.getUserById(user.id);
   }
-  //나의 정보 수정
-  @Patch('/profile')
+  //--------------------------------------나의 정보 수정--------------------------------------
+  //비밀번호 수정
+  @Put('/password')
   @UseGuards(AuthGuard())
-  async updateUserProfile(
+  async updatePassword(
     @GetUser() user: User,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<User> {
-    return await this.userService.updateUserProfile(user.id, updateUserDto);
+    return await this.userService.updatePassword(user.id, updatePasswordDto);
+  }
+
+  //닉네임 수정
+  @Put('/nickname')
+  @UseGuards(AuthGuard())
+  async updateUserNickname(
+    @GetUser() user: User,
+    @Body() updateNicknameDto: UpdateNicknameDto,
+  ): Promise<User> {
+    return await this.userService.updateUserNickname(
+      user.id,
+      updateNicknameDto,
+    );
   }
 
   //회원 탈퇴

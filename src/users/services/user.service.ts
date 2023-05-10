@@ -14,6 +14,8 @@ import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenService } from './token.service';
 import { RefreshTokenRepository } from '../repositories/token.repository';
+import { UpdateNicknameDto } from '../dto/update-nickname.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -172,22 +174,29 @@ export class UserService {
 
     return await query.getOne();
   }
-  //나의 정보 수정
-  async updateUserProfile(userId: number, updateUserDto: UpdateUserDto) {
-    const { nickname, password } = updateUserDto;
+  //--------------------------------------나의 정보 수정--------------------------------------
+  //비밀번호 수정
+  async updatePassword(userId: number, updatePasswordDto: UpdatePasswordDto) {
+    const { password, passwordConfirm } = updatePasswordDto;
     const user = await this.userRepository.findOne({ where: { id: userId } });
-    if (
-      updateUserDto.password &&
-      updateUserDto.password !== updateUserDto.passwordConfirm
-    ) {
+
+    if (password !== passwordConfirm) {
       throw new BadRequestException(`비밀번호 값이 일치하지 않습니다.`);
     }
 
-    if (password) {
-      const hashedPassword = await hash(password, 10);
-      user.password = hashedPassword;
-    }
+    const hashedPassword = await hash(password, 10);
+    user.password = hashedPassword;
 
+    return await this.userRepository.save(user);
+  }
+
+  //닉네임수정
+  async updateUserNickname(
+    userId: number,
+    UpdateNicknameDto: UpdateNicknameDto,
+  ) {
+    const { nickname } = UpdateNicknameDto;
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     //닉네임 중복 체크
     const nickname_check = await this.userRepository.findOne({
       where: { nickname },
@@ -195,24 +204,13 @@ export class UserService {
     if (nickname_check) {
       throw new BadRequestException('사용중인 닉네임입니다.');
     }
-
-    if (nickname !== undefined) {
-      user.nickname = nickname;
-    }
+    user.nickname = nickname;
 
     return await this.userRepository.save(user);
   }
 
   //회원탈퇴
-
   async deleteUser(userId: number) {
     return await this.userRepository.deleteUser(userId);
   }
-
-  // async getUserById(userId: number) {
-  //   const user = await this.userRepository.findOne({
-  //     where: { id: userId },
-  //   });
-  //   return user;
-  // }
 }
