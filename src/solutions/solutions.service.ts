@@ -40,23 +40,24 @@ export class SolutionsService {
 
     // 예측된 diseaseId를 레포지토리에 넘겨 db에서 해결책 받아옴
     const solution = await this.solutionRepository.getSolutionById(solutionId);
-    return { ...solution, image: file.location };
+
+    // resolved_at: 현재 시간 구하기
+    const now = await new Date()
+    const kstDate = now.toLocaleString('en-US', { timeZone: 'Asia/Seoul', hour12: false }).substr(0, 19);
+    const [month, day, year, time] = kstDate.split(/\/|,\s*/);
+    const formattedDateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}  ${time}`;
+    const formattedDateStr2 = formattedDateStr.replace(/\s{2,}/g, ' ');
+
+    return { ...solution, image: file.location, resolved_at: formattedDateStr2 };
   }
 
   // createSolutions: (마이페이지) 유저해결책 자장
   async createUserSolution(userId:number, createUserSolutionDto: CreateUsersolutionDto) {
     // userProblem 테이블에 userId, solutionId, image, resolved_at 저장
-    await this.userProblemRepository.createUserSolution(userId, createUserSolutionDto)
-
-    // id가 userId인 user 조회
-    const user = await this.userRepository.getUserById(userId)
-
-    // id가 solutionId인 solution 조회
-    const {solutionId} = createUserSolutionDto
-    const solution = await this.solutionRepository.getSolutionById(solutionId)
+    const userSolution = await this.userProblemRepository.createUserSolution(userId, createUserSolutionDto)
 
     // 저장된 user, solution 정보 반환
-    return {user, solution}
+    return userSolution
   }
 
   // getSolutions: (마이페이지) 유저해결책 조회

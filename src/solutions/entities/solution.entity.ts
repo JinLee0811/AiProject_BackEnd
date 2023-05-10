@@ -19,14 +19,13 @@ export class Solution extends BaseEntity {
 
   @Column({
     type: 'timestamp',
-
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  created_at: Date;
 
   @ManyToMany(() => User, user => user.solutions)
   users: User[];

@@ -15,18 +15,18 @@ export class UserProblem {
     solution: Solution;
 
     @Column()
-    userId: number
+    user_id: number
 
     @Column()
-    solutionId: number
+    solution_id: number
 
     @Column()
     image: string
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
+    created_at: Date;
 
     @Column()
-    resolvedAt: Date;
+    resolved_at: Date;
 
 }

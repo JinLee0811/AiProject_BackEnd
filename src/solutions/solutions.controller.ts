@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller, Delete, Get, Param,
+  Controller, Delete, Get, Param, ParseIntPipe,
   Post, Req,
   UploadedFile,
   UploadedFiles, UseGuards,
@@ -21,6 +21,7 @@ export class SolutionsController {
 
   // getSolutionByPredict: 질병 진단
   @Post("/predict")
+  @UseGuards(AuthGuard())
   @UseInterceptors(FileInterceptor('image', multerOptions('crop')))
   getSolutionByPredict(@UploadedFile() file) {
     // 요청: 이미지 1장
@@ -50,8 +51,8 @@ export class SolutionsController {
 
   // deleteSolutionsById: (마이페이지) 해결책 삭제
   @Delete("/:userSolutionId")
-  // @UseGuards(AuthGuard())
-  async deleteUserSolutionById(@Param() userSolutionId: number,
+  @UseGuards(AuthGuard())
+  async deleteUserSolutionById(@Param('userSolutionId', ParseIntPipe) userSolutionId: number,
                       ) {
     // 요청: 삭제할 나의해결책 id
     // 응답: 성공 메시지

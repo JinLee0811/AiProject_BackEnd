@@ -13,24 +13,25 @@ export class UserProblemRepository extends Repository<UserProblem> {
     // createSolutions: (마이페이지) 해결책 자장
     async  createUserSolution(userId:number, createUserSolutionDto: CreateUsersolutionDto) {
         // user_problem 테이블 저장
-        const {solutionId, image, resolvedAt} = createUserSolutionDto
-        const userSolution = this.create({
-            userId,
-            solutionId,
+        const {solution_id, image, resolved_at} = createUserSolutionDto
+        const userSolution = await this.create({
+            user_id: userId,
+            solution_id,
             image,
-            resolvedAt
+            resolved_at
         })
         await this.save(userSolution)
+        return userSolution
     }
 
 
     // getSolutions: (마이페이지) 해결책 조회
     async getUserSolutions(user_id:number) {
         // user_problem, solution 테이블 조인
-        const userSolutions = await this.createQueryBuilder('userSolution')
-            .leftJoinAndSelect("userSolution.solution", "solution")
-            .where("userSolution.user_id = :user_id", {user_id})
-            .select(['userSolution.id', 'userSolution.image', 'userSolution.createdAt', 'userSolution.resolvedAt', 'solution'])
+        const userSolutions = await this.createQueryBuilder('userProblem')
+            .leftJoinAndSelect("userProblem.solution", "solution")
+            .where("userProblem.user_id = :user_id", {user_id})
+            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'solution'])
             .getMany()
 
         return userSolutions

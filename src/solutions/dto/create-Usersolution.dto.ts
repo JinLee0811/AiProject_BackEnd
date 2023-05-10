@@ -3,12 +3,12 @@ import {time} from "aws-sdk/clients/frauddetector";
 
 export class CreateUsersolutionDto {
     @IsNotEmpty()
-    solutionId: number
+    solution_id: number
 
     @IsNotEmpty()
     image: string
 
     @IsNotEmpty()
-    resolvedAt: Date
+    resolved_at: Date
 }
 
