@@ -23,7 +23,7 @@ export class TonicsController {
     return await this.tonicsService.getTonics()
   }
 
-  // getCategories: 영양제 카테고리 조회
+  // getCategories: 영양제 카테고리 조회!!
   @Get("/categories")
   async getCategories() {
     // 응답: 전체 카테고리 정보
