@@ -13,10 +13,16 @@ import {HttpService} from "@nestjs/axios";
 import axios from "axios";
 import {AXIOS_INSTANCE_TOKEN} from "@nestjs/axios/dist/http.constants";
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Solution, UserProblem, User])],
   controllers: [SolutionsController],
-  providers: [SolutionsService, SolutionRepository, UserProblemRepository, UserRepository, HttpService,
+  providers: [
+    SolutionsService,
+    SolutionRepository,
+    UserProblemRepository,
+    UserRepository,
+    HttpService,
     {
       provide: AXIOS_INSTANCE_TOKEN,
       useValue: axios.create(), // AXIOS_INSTANCE_TOKEN provider 추가

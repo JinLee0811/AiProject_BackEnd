@@ -23,7 +23,7 @@ import { SolutionsController } from './solutions/solutions.controller';
 import { SolutionsService } from './solutions/solutions.service';
 import { SolutionRepository } from './solutions/repositories/solution.repository';
 import { TonicCategoryRepository } from './tonics/repositories/tonic-category.repository';
-import {BoardModule} from "./boards/boards.module";
+import { BoardModule } from './boards/boards.module';
 import { UserRepository } from './users/user.repository';
 import {UserProblemRepository} from "./solutions/repositories/user-problem.repository";
 import {HttpService} from "@nestjs/axios";
@@ -41,14 +41,14 @@ import axios from "axios";
     AdminModule,
     CommentModule,
     UserModule,
-      SolutionsModule
+    SolutionsModule,
   ],
   controllers: [
     BoardController,
     TonicsController,
     SolutionsController,
     AdminController,
-      SolutionsController
+    SolutionsController,
   ],
   providers: [
     BoardService,
