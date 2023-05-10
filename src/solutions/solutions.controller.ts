@@ -25,7 +25,7 @@ export class SolutionsController {
   getSolutionByPredict(@UploadedFile() file) {
     // 요청: 이미지 1장
     // 응답: 진단받은 질병에 대한 해결책
-    return this.solutionsService.getSolutionByPredict(file.location);
+    return this.solutionsService.getSolutionByPredict(file);
   }
 
   // createSolutions: (마이페이지) 해결책 자장
