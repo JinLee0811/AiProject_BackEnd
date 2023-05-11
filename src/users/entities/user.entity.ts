@@ -12,6 +12,8 @@ import { Comment } from 'src/comments/comment.entity';
 import { RefreshToken } from './token.entity';
 import { Solution } from '../../solutions/entities/solution.entity';
 import { Category } from '../../tonics/entities/category.entity';
+import { UserLike } from 'src/likes/user-like.entity';
+// import { UserLike } from 'src/likes/user-like.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -66,4 +68,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => UserLike, (userLike) => userLike.user)
+  likes: UserLike[];
 }

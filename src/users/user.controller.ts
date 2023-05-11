@@ -24,12 +24,12 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
-  //회원가입
+  //--------------------------------------회원가입--------------------------------------
   @Post('/signup')
   async signUp(@Body() createUserDto: CreateUserDto) {
     return this.userService.signUp(createUserDto);
   }
-  //로그인
+  //--------------------------------------로그인--------------------------------------
   @Post('/signin')
   async login(@Body() loginUserDto: LoginUserDto) {
     // const token = await this.userService.login(loginUserDto);
@@ -40,14 +40,14 @@ export class UserController {
     );
     return { access_token, refresh_token };
   }
-  //어세스 토큰 재발급 (만료시)
+  //-------------------------------어세스 토큰 재발급 (만료시)-------------------------------
   @Post('/access')
   async refreshAccessToken(@Body('refresh_token') refreshToken: string) {
     const accessToken = await this.userService.refreshAccessToken(refreshToken);
 
     return { access_token: accessToken };
   }
-  //로그아웃
+  //--------------------------------------로그아웃--------------------------------------
   @Delete('/signout/:userId')
   @UseGuards(AuthGuard()) //로그인한 유저만 가능
   @HttpCode(HttpStatus.OK)
@@ -55,7 +55,7 @@ export class UserController {
     return await this.userService.signOut(userId);
   }
 
-  //나의 정보 조회
+  //--------------------------------------나의 정보 조회--------------------------------------
   @Get('/profile')
   @UseGuards(AuthGuard()) //로그인한 유저만 가능
   async getUserById(@GetUser() user: User): Promise<User> {
@@ -85,10 +85,16 @@ export class UserController {
     );
   }
 
-  //회원 탈퇴
+  //--------------------------------------회원 탈퇴--------------------------------------
   @Delete('/profile')
   @UseGuards(AuthGuard())
-  async deleteUser(@GetUser() user: User): Promise<void> {
-    await this.userService.deleteUser(user.id);
+  async deleteUser(
+    @GetUser() user: User,
+    @Body() body: { password: string },
+  ): Promise<{ message: string }> {
+    await this.userService.deleteUser(user.id, body.password);
+    return {
+      message: '유저 삭제 완료',
+    };
   }
 }

@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/repositories/user.repository';
+import { UserLikeRepository } from 'src/likes/user-like.repository';
 
 @Injectable()
 export class BoardService {
@@ -16,12 +17,11 @@ export class BoardService {
     private boardRepository: BoardRepository,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(UserLikeRepository)
+    private userLikeRepository: UserLikeRepository,
   ) {}
 
   createBoard(createBoardDto: CreateBoardDto, user: User, imageUrl?: string) {
-    //const imageUrl = file.location;
-    //return this.boardRepository.createBoard(createBoardDto, imageUrl);
-
     try {
       return this.boardRepository.createBoard(createBoardDto, user, imageUrl);
     } catch (error) {
@@ -35,6 +35,7 @@ export class BoardService {
   //나의 게시글 조회
   async getMyBoards(user: User) {
     const query = this.boardRepository.createQueryBuilder('board');
+    query.leftJoinAndSelect('board.user', 'user');
     query.where('board.user_id = :user_id', { user_id: user.id });
     const board = await query.getMany();
     return board;
@@ -44,7 +45,7 @@ export class BoardService {
     const found = await this.boardRepository.getBoardById(id);
     return found;
   }
-
+  //게시글 수정
   async updateBoard(
     id: number,
     updateBoardDto: UpdateBoardDto,
@@ -70,4 +71,8 @@ export class BoardService {
   async deleteBoard(id: number, user: User): Promise<string> {
     return this.boardRepository.deleteBoard(id, user);
   }
+
+  // async toggleLike(boardId: number, userId: number): Promise<number> {
+  //   return this.boardRepository.toggleLike(boardId, userId);
+  // }
 }

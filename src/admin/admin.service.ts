@@ -158,8 +158,8 @@ export class AdminService {
     return this.userRepository.getAllUsers();
   }
   //유저 삭제
-  async deleteUser(userId: number): Promise<void> {
-    return this.userRepository.deleteUser(userId);
+  async deleteUserAdmin(userId: number): Promise<void> {
+    return this.userRepository.deleteUserAdmin(userId);
   }
   //-------------------- 게시판  -------------------------
   //모든 유저의 해당 게시글 삭제
