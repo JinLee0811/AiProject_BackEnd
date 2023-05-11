@@ -9,18 +9,19 @@ export class UserRepository extends Repository<User> {
   }
 
   // getUserById: id로 user 찾기
-  async getUserById(userId: number) {
-    return this.findOne({ where: { id: userId } });
-  }
+  // async getUserById(userId: number) {
+  //   return this.findOne({ where: { id: userId } });
+  // }
 
+  //--------------------------------------관리자 유저 전체 조회--------------------------------------
   async getAllUsers(): Promise<User[]> {
     return await this.find();
     // return await this.find({
     //   where: { deleted_at: IsNull() },
     // }); //삭제되지 않은 유저만 조회
   }
-
-  async deleteUser(userId: number): Promise<void> {
+  //--------------------------------------관리자 유저 삭제--------------------------------------
+  async deleteUserAdmin(userId: number): Promise<void> {
     const user = await this.findOne({ where: { id: userId } });
 
     if (!user) {

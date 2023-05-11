@@ -22,13 +22,13 @@ export class BoardRepository extends Repository<Board> {
     user: User,
     imageUrl?: string,
   ) {
-    const { title, content } = createBoardDto;
+    const { title, content, status } = createBoardDto;
 
     const board = this.create({
       title,
       content,
+      status,
       image: imageUrl ?? null,
-      status: BoardStatus.PUBLIC,
       user,
     });
     await this.save(board);
@@ -63,7 +63,7 @@ export class BoardRepository extends Repository<Board> {
     user: User,
     imageUrl?: string,
   ) {
-    const { title, content, image } = updateBoardDto;
+    const { title, content, status, image } = updateBoardDto;
     const board = await this.getBoardById(id);
 
     if (board.user.id !== user.id) {
@@ -72,8 +72,8 @@ export class BoardRepository extends Repository<Board> {
 
     board.title = title;
     board.content = content;
+    board.status = status;
     board.user = user;
-    //console.log('***********************' + board.updated_at);
 
     if (imageUrl !== undefined) {
       // update board_img
@@ -95,7 +95,6 @@ export class BoardRepository extends Repository<Board> {
   async updateBoardStatus(id: number, status: BoardStatus) {
     const board = await this.getBoardById(id);
     board.status = status;
-    //board.updatedAt = new Date();
 
     await this.save(board);
     return board;

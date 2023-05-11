@@ -120,7 +120,7 @@ export class AdminController {
   @Delete('users/:userId')
   @UseGuards(AdminAuthGuard)
   async deleteUser(@Param('userId', ParseIntPipe) id: number) {
-    await this.adminService.deleteUser(id);
+    await this.adminService.deleteUserAdmin(id);
     return { message: '유저 삭제 완료' };
   }
   //-------------------- 게시판  -------------------------

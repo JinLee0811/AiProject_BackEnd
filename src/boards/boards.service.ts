@@ -19,9 +19,6 @@ export class BoardService {
   ) {}
 
   createBoard(createBoardDto: CreateBoardDto, user: User, imageUrl?: string) {
-    //const imageUrl = file.location;
-    //return this.boardRepository.createBoard(createBoardDto, imageUrl);
-
     try {
       return this.boardRepository.createBoard(createBoardDto, user, imageUrl);
     } catch (error) {
@@ -44,7 +41,7 @@ export class BoardService {
     const found = await this.boardRepository.getBoardById(id);
     return found;
   }
-
+  //게시글 수정
   async updateBoard(
     id: number,
     updateBoardDto: UpdateBoardDto,
