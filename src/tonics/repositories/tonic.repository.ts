@@ -64,10 +64,11 @@ export class TonicRepository extends Repository<Tonic> {
     const tonic = await this.findOne({ where: { id: tonicId } })
 
     // 수정할 때 이미지 재첨부를 하지 않을 시 이미지 값이 들어오는지 안 들어오는지 확인하기
-    const {name, description} = updateTonicDto
+    const {name, description, short_description} = updateTonicDto
 
     tonic.name = name
     tonic.description = description
+    tonic.short_description = short_description
     tonic.image = tonicImg
 
     await this.save(tonic)

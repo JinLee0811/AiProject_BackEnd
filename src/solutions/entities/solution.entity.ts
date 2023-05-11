@@ -16,6 +16,7 @@ export class Solution extends BaseEntity {
   @Column()
   disease_solution: string;
 
+  description:string;
 
   @Column({
     type: 'timestamp',

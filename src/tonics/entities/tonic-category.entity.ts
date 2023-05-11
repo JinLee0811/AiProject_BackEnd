@@ -4,6 +4,8 @@ import { Category } from './category.entity';
 
 @Entity({name: "tonic_category"})
 export class TonicCategory {
+    @PrimaryGeneratedColumn()
+    id: number
 
     @ManyToOne(() => Tonic, tonic => tonic.categories)
     tonic: Tonic;
@@ -11,10 +13,10 @@ export class TonicCategory {
     @ManyToOne(() => Category, category => category.tonics)
     category: Category;
 
-    @PrimaryColumn()
-    tonicId: number
+    @Column()
+    tonic_id: number
 
     @Column()
-    categoryId: number
+    category_id: number
 
 }

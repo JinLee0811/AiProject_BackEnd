@@ -56,7 +56,7 @@ export class AdminController {
 
     return await this.adminService.updateTonic(
       tonicId,
-      file.location,
+      file,
       updateTonicDto,
     );
   }
