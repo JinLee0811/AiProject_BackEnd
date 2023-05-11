@@ -27,10 +27,10 @@ export class Tonic extends BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP'
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  created_at: Date;
 
   @OneToMany(() => TonicCategory, tonicCategory => tonicCategory.tonic)
   tonicCategories: TonicCategory[];

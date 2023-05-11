@@ -18,7 +18,7 @@ export class TonicCategoryRepository extends Repository<TonicCategory> {
 
     // deleteTonicCategoryByTonicId: 특정 영양제 row 모두 삭제 (영양제 수장시 사용)
     async deleteTonicCategoryByTonicId(tonicId:number) {
-        await this.delete({tonicId: tonicId});
+        await this.delete({tonic_id: tonicId});
     }
 
 }

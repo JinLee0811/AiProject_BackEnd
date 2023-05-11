@@ -58,39 +58,57 @@ export class AdminService {
   }
 
   // updateTonic: 영양제 수정
-  async updateTonic(tonicId: number, tonicImg, updateTonicDto: UpdateTonicDto) {
-    const { categoryIds } = updateTonicDto;
+  async updateTonic(tonicId: number, file, updateTonicDto: UpdateTonicDto) {
+    const { categoryIds} = updateTonicDto;
 
-    // 삭제, 수정 하기 전에 없는 카테고리가 들어오면 오류
-    await Promise.all(
-      categoryIds.map(async (categoryId) => {
-        const category = await this.categoryRepository.getCategoryById(
-          categoryId,
-        );
 
-        if (!category) {
-          throw new NotFoundException(
-            `Category with id ${categoryId} does not exist`,
-          );
-        }
-        return category;
-      }),
-    );
+    // 카테고리 배열에 0만 담아 올 경우 => 수정사항 없음.
+    if (categoryIds.length === 1 && String(categoryIds[0]) === "0") {
+      console.log("1")
+    } else {
+      // 삭제, 수정 하기 전에 없는 카테고리가 들어오면 오류
+      await Promise.all(
+          categoryIds.map(async (categoryId) => {
+            const category = await this.categoryRepository.getCategoryById(
+                categoryId,
+            );
 
-    // tonic_category 테이블에서 토닉 ID를 가진 row 모두 삭제
-    await this.tonicCategoryRepository.deleteTonicCategoryByTonicId(tonicId);
+            if (!category) {
+              throw new NotFoundException(
+                  `Category with id ${categoryId} does not exist`,
+              );
+            }
+            return category;
+          }),
+      );
 
-    const tonicCategories = [];
-    for (const categoryId of categoryIds) {
-      tonicCategories.push({ tonicId: tonicId, categoryId: categoryId });
+      // tonic_category 테이블에서 토닉 ID를 가진 row 모두 삭제
+      await this.tonicCategoryRepository.deleteTonicCategoryByTonicId(tonicId);
+
+      const tonicCategories = [];
+      for (const categoryId of categoryIds) {
+        tonicCategories.push({ tonic_id: tonicId, category_id: categoryId });
+      }
+
+      // tonicCategories 추가
+      await this.tonicCategoryRepository.saveTonicCategory(tonicCategories);
     }
 
-    await this.tonicCategoryRepository.saveTonicCategory(tonicCategories);
+    // 이미지가 빈 값으로 올 경우 => 이미지 수정 사항 없음.
+    let image;
+
+    if (!file) {
+      const tonic = await this.tonicRepository.getTonicById(tonicId)
+      image = tonic.image
+    } else {
+      image = file.location
+    }
+
 
     // tonic 테이블 수정
     return await this.tonicRepository.updateTonic(
       tonicId,
-      tonicImg,
+      image,
       updateTonicDto,
     );
   }
@@ -114,6 +132,7 @@ export class AdminService {
     return this.categoryRepository.createCategory(createCategoryDto);
   }
 
+
   // updateCategory: 영양제 카테고리 수정
   async updateCategory(categoryId, updateCategoryDto: UpdateCategoryDto) {
     return this.categoryRepository.updateCategory(
@@ -121,6 +140,7 @@ export class AdminService {
       updateCategoryDto,
     );
   }
+
 
   // deleteCategory: 영양제 카테고리 삭제
   async deleteCategory(categoryId) {
@@ -130,6 +150,7 @@ export class AdminService {
 
     return this.categoryRepository.deleteCategory(categoryId);
   }
+
 
   //-------------------- 유저  -------------------------
   //유저 전체 조회

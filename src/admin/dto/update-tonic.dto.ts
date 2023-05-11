@@ -12,5 +12,5 @@ export class UpdateTonicDto {
   short_description: string;
 
   @IsNotEmpty()
-  categoryIds: []
+  categoryIds: number[]
 }
