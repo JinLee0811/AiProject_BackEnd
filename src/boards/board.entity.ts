@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BoardStatus } from './board-status.enum';
 import { Comment } from '../comments/comment.entity';
-import { User } from 'src/users/user.entity';
+import { User } from 'src/users/entities/user.entity';
 @Entity()
 export class Board extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })

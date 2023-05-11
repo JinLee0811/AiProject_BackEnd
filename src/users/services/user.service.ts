@@ -1,19 +1,20 @@
 import {
   BadRequestException,
-  Inject,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserRepository } from './user.repository';
+import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UserRepository } from '../repositories/user.repository';
 import { hash, compare } from 'bcrypt';
 
-import { LoginUserDto } from './dto/login-user.dto';
+import { LoginUserDto } from '../dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshTokenService } from './token/token.service';
-import { RefreshTokenRepository } from './token/token.repository';
+import { RefreshTokenService } from './token.service';
+import { RefreshTokenRepository } from '../repositories/token.repository';
+import { UpdateNicknameDto } from '../dto/update-nickname.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -32,10 +33,10 @@ export class UserService {
     const { email, password, nickname } = createUserDto;
 
     // email 중복 체크
-    const email_check = await this.userRepository.findOne({ where: { email } });
-    if (email_check) {
-      throw new BadRequestException('이미 가입된 이메일입니다.');
-    }
+    // const email_check = await this.userRepository.findOne({ where: { email } });
+    // if (email_check) {
+    //   throw new BadRequestException('이미 가입된 이메일입니다.');
+    // }
     //닉네임 중복 체크
     const nickname_check = await this.userRepository.findOne({
       where: { nickname },
@@ -75,6 +76,10 @@ export class UserService {
         email: loginUserDto.email,
       },
     });
+    // 유저가 존재하지 않는 경우
+    if (!user) {
+      throw new UnauthorizedException('유저를 찾을 수 없습니다.');
+    }
 
     const isPasswordValid = await compare(password, user.password);
     if (!user || !isPasswordValid) {
@@ -101,7 +106,6 @@ export class UserService {
 
   //acess token(AT) 만료시 새로운 AT발급
   async refreshAccessToken(refreshToken: string): Promise<string> {
-    // Refresh Token 검증
     // Refresh Token 검증
     const refreshTokenEntity = await this.refreshTokenRepository.findOne({
       where: { refresh_token: refreshToken },
@@ -154,6 +158,57 @@ export class UserService {
     return await this.userRepository.getAllUsers();
   }
 
+  // async getUserById(userId: number) {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: userId },
+  //   });
+  //   return user;
+  // }
+  //나의 정보 조회
+  async getUserById(userId: number) {
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.nickname', 'user.email', 'user.is_admin'])
+      .where('user.id = :userId', { userId });
+
+    return await query.getOne();
+  }
+  //--------------------------------------나의 정보 수정--------------------------------------
+  //비밀번호 수정
+  async updatePassword(userId: number, updatePasswordDto: UpdatePasswordDto) {
+    const { password, passwordConfirm } = updatePasswordDto;
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (password !== passwordConfirm) {
+      throw new BadRequestException(`비밀번호 값이 일치하지 않습니다.`);
+    }
+
+    const hashedPassword = await hash(password, 10);
+    user.password = hashedPassword;
+
+    return await this.userRepository.save(user);
+  }
+
+  //닉네임수정
+  async updateUserNickname(
+    userId: number,
+    UpdateNicknameDto: UpdateNicknameDto,
+  ) {
+    const { nickname } = UpdateNicknameDto;
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    //닉네임 중복 체크
+    const nickname_check = await this.userRepository.findOne({
+      where: { nickname },
+    });
+    if (nickname_check) {
+      throw new BadRequestException('사용중인 닉네임입니다.');
+    }
+    user.nickname = nickname;
+
+    return await this.userRepository.save(user);
+  }
+
+  //회원탈퇴
   async deleteUser(userId: number) {
     return await this.userRepository.deleteUser(userId);
   }

@@ -11,11 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/users/get-user.decorator';
-import { User } from 'src/users/user.entity';
+import { GetUser } from 'src/users/auth/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/crate-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { AdminAuthGuard } from 'src/users/auth/admin-auth.guard';
 
 @Controller('comment/:boardId')
 export class CommentController {

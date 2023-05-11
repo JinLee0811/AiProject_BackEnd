@@ -14,9 +14,9 @@ import { UpdateTonicDto } from './dto/update-tonic.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { TonicCategoryRepository } from '../tonics/repositories/tonic-category.repository';
-import { UserRepository } from 'src/users/user.repository';
-import { User } from 'src/users/user.entity';
-import {string} from "@tensorflow/tfjs-node";
+import { UserRepository } from 'src/users/repositories/user.repository';
+import { User } from 'src/users/entities/user.entity';
+import { BoardRepository } from 'src/boards/repositories/board.repository';
 
 @Injectable()
 export class AdminService {
@@ -29,6 +29,8 @@ export class AdminService {
     private tonicCategoryRepository: TonicCategoryRepository,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(BoardRepository)
+    private boardRepository: BoardRepository,
   ) {}
 
   //-------------------- 영양제  -------------------------
@@ -151,11 +153,17 @@ export class AdminService {
 
 
   //-------------------- 유저  -------------------------
+  //유저 전체 조회
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.getAllUsers();
   }
-
+  //유저 삭제
   async deleteUser(userId: number): Promise<void> {
     return this.userRepository.deleteUser(userId);
+  }
+  //-------------------- 게시판  -------------------------
+  //모든 유저의 해당 게시글 삭제
+  async deleteBoardAdmin(boardId: number): Promise<string> {
+    return this.boardRepository.deleteBoardAdmin(boardId);
   }
 }

@@ -1,4 +1,3 @@
-
 //controllers.boards.controller.ts
 import {
   Body,
@@ -24,8 +23,8 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 import { BoardStatus } from './board-status.enum';
 import { multerOptions } from 'src/utils/multer.options';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/users/get-user.decorator';
-import { User } from 'src/users/user.entity';
+import { GetUser } from 'src/users/auth/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('board')
 export class BoardController {

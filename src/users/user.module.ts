@@ -1,16 +1,16 @@
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { UserService } from './user.service';
+import { User } from './entities/user.entity';
+import { UserService } from './services/user.service';
 import { UserController } from './user.controller';
 import { Board } from 'src/boards/board.entity';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './repositories/user.repository';
 import { JwtModule } from '@nestjs/jwt';
-import { RefreshTokenService } from './token/token.service';
-import { RefreshTokenRepository } from './token/token.repository';
-import { RefreshToken } from './token/token.entity';
+import { RefreshTokenService } from './services/token.service';
+import { RefreshTokenRepository } from './repositories/token.repository';
+import { RefreshToken } from './entities/token.entity';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './token/jwt.strategy';
+import { JwtStrategy } from './auth/jwt.strategy';
 import * as dotenv from 'dotenv';
 dotenv.config();
 @Module({
