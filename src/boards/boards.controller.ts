@@ -104,4 +104,14 @@ export class BoardController {
     const message = await this.boardService.deleteBoard(id, user);
     return { message };
   }
+
+  // @Post('/likes/:id')
+  // @UseGuards(AuthGuard())
+  // async toggleLike(
+  //   @Param('id') id: number,
+  //   @GetUser() user: User,
+  // ): Promise<{ likes: number }> {
+  //   const likes = await this.boardService.toggleLike(id, user.id);
+  //   return { likes };
+  // }
 }

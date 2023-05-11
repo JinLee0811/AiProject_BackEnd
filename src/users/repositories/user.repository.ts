@@ -15,10 +15,10 @@ export class UserRepository extends Repository<User> {
 
   //--------------------------------------관리자 유저 전체 조회--------------------------------------
   async getAllUsers(): Promise<User[]> {
-    return await this.find();
-    // return await this.find({
-    //   where: { deleted_at: IsNull() },
-    // }); //삭제되지 않은 유저만 조회
+    // return await this.find();
+    return await this.find({
+      where: { deleted_at: IsNull() },
+    }); //삭제되지 않은 유저만 조회
   }
   //--------------------------------------관리자 유저 삭제--------------------------------------
   async deleteUserAdmin(userId: number): Promise<void> {

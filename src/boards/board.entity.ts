@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Comment } from '../comments/comment.entity';
 import { User } from 'src/users/entities/user.entity';
+import { UserLike } from 'src/likes/user-like.entity';
 // import { UserLike } from 'src/likes/user-like.entity';
 @Entity()
 export class Board extends BaseEntity {
@@ -26,7 +27,7 @@ export class Board extends BaseEntity {
   @Column({ default: null, nullable: true })
   image: string;
 
-  @Column({ default: 0, unsigned: true })
+  @Column({ default: 0 })
   likes: number;
 
   @Column({ default: 0, unsigned: true })
@@ -54,7 +55,8 @@ export class Board extends BaseEntity {
   // User와 Board의 일대다(OneToMany) 관계를 정의
   @ManyToOne(() => User, (user) => user.boards)
   user: User;
+
   //UserLike 엔티티와의 일대다(OneToMany) 관계
-  // @OneToMany(() => UserLike, (userLike) => userLike.board)
-  // userLikes: UserLike[];
+  @OneToMany(() => UserLike, (userLike) => userLike.board)
+  userLikes: UserLike[];
 }
