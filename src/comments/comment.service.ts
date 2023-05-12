@@ -22,7 +22,7 @@ export class CommentService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
   ) {}
-  //댓글 생성##################################
+  //댓글 생성
   async createComment(
     boardId: number,
     createCommentDto: CreateCommentDto,
@@ -50,6 +50,7 @@ export class CommentService {
     comment.updated_at = new Date();
     return await this.commentRepository.save(comment);
   }
+
   //댓글 전체 조회
   async findAll(boardId: number): Promise<Comment[]> {
     return await this.commentRepository.find({
@@ -61,8 +62,35 @@ export class CommentService {
     });
   }
 
-  //댓글 수정
+  //대댓글만 조회
+  // async getComment(commentId: number): Promise<Comment[]> {
+  //   return await this.commentRepository.find({
+  //     where: {
+  //       parent_comment_id: commentId,
+  //       deleted_at: IsNull(),
+  //     },
+  //     order: { created_at: 'ASC' },
+  //   });
+  // }
+  async getComment(
+    commentId: number,
+    page: number = 1,
+    limit: number = 3,
+  ): Promise<Comment[]> {
+    const skip = (page - 1) * limit;
+    const comments = await this.commentRepository.find({
+      where: {
+        parent_comment_id: commentId,
+        deleted_at: IsNull(),
+      },
+      order: { created_at: 'ASC' },
+      skip,
+      take: limit,
+    });
+    return comments;
+  }
 
+  //댓글 수정
   async updateComment(
     boardId: number,
     commentId: number,

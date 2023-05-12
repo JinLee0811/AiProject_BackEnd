@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,7 +22,7 @@ import { AdminAuthGuard } from 'src/users/auth/admin-auth.guard';
 @Controller('comment/:boardId')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
-
+  //댓글 생성
   @Post()
   @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
   async createComment(
@@ -37,11 +38,28 @@ export class CommentController {
       user,
     );
   }
+
   //댓글 전체 조회
   @Get()
   async findAll(@Param('boardId') boardId: string) {
     return await this.commentService.findAll(Number(boardId));
   }
+
+  //대댓글만 조회
+  //페이지네이션 x
+  // @Get(':commentId')
+  // async getComment(@Param('commentId') commentId: string) {
+  //   return await this.commentService.getComment(Number(commentId));
+  // }
+  //페이지네이션 o
+  @Get(':commentId')
+  async getComment(
+    @Param('commentId') commentId: string,
+    @Query('page') page: number,
+  ) {
+    return await this.commentService.getComment(Number(commentId), page);
+  }
+
   //댓글 수정
   @Patch(':commentId')
   @UseGuards(AuthGuard()) //로그인된 유저만 수정 가능

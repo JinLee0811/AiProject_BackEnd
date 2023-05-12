@@ -23,7 +23,7 @@ dotenv.config();
     ]),
     JwtModule.register({
       secret: process.env.SECRET_KEY, //토큰 생성시
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '6h' },
     }),
 
     PassportModule.register({

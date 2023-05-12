@@ -75,4 +75,31 @@ export class BoardService {
   // async toggleLike(boardId: number, userId: number): Promise<number> {
   //   return this.boardRepository.toggleLike(boardId, userId);
   // }
+  async toggleLike(boardId: number, userId: number): Promise<number> {
+    const userLike = await this.userLikeRepository.findOne({
+      where: { board_id: boardId, user_id: userId },
+    });
+    if (userLike) {
+      await this.userLikeRepository.remove(userLike);
+      await this.boardRepository.decrement({ id: boardId }, 'likes', 1);
+
+      const board = await this.boardRepository.findOne({
+        where: { id: boardId },
+      });
+      //첫 좋아요(likes=0이면)
+      if (board.likes === 0) {
+        return 0;
+      }
+      //처음 아닌 경우 -1
+      return -1;
+    } else {
+      await this.userLikeRepository.insert({
+        board_id: boardId,
+        user_id: userId,
+        is_liked: true,
+      });
+      await this.boardRepository.increment({ id: boardId }, 'likes', 1);
+      return 1;
+    }
+  }
 }
