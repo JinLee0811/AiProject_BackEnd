@@ -27,7 +27,6 @@ export class SolutionsController {
 
   // getSolutionByPredict: 질병 진단
   @Post('/predict')
-  @UseGuards(AuthGuard())
   @UseInterceptors(FileInterceptor('image', multerOptions('crop')))
   getSolutionByPredict(@UploadedFile() file) {
     // 요청: 이미지 1장
@@ -58,6 +57,19 @@ export class SolutionsController {
     // 해당 유저의 해결책
     return await this.solutionsService.getUserSolutions(user.id);
   }
+
+  // getUserSolutionById: (마이페이지) 해결책 상세 조회
+  @Get('/:userSolutionId')
+  @UseGuards(AuthGuard())
+  async getUserSolutionById(
+      @Param('userSolutionId', ParseIntPipe) userSolutionId: number,
+      @GetUser() user: User
+  ) {
+    // 요청: (param) 상세조회할 유저 해결책 id
+    // 응답: id에 해당하는 유저 해결책
+    return await this.solutionsService.getUserSolutionById(user.id, userSolutionId)
+  }
+
 
   // deleteSolutionsById: (마이페이지) 해결책 삭제
   @Delete('/:userSolutionId')

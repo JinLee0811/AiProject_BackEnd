@@ -34,7 +34,6 @@ export class AdminService {
   ) {}
 
   //-------------------- 영양제  -------------------------
-
   // createTonic: 영양제 추가
   async createTonic(tonic_img, createTonicDto: CreateTonicDto) {
     const tonic = await this.tonicRepository.createTonic(
@@ -125,13 +124,12 @@ export class AdminService {
     return this.tonicRepository.deleteTonic(tonicId);
   }
 
-  //-------------------- 카테고리  -------------------------
 
+  //-------------------- 카테고리  -------------------------
   // createCategory: 영양체 카테고리 추가
   async createCategory(createCategoryDto: CreateCategoryDto) {
     return this.categoryRepository.createCategory(createCategoryDto);
   }
-
 
   // updateCategory: 영양제 카테고리 수정
   async updateCategory(categoryId, updateCategoryDto: UpdateCategoryDto) {
@@ -140,7 +138,6 @@ export class AdminService {
       updateCategoryDto,
     );
   }
-
 
   // deleteCategory: 영양제 카테고리 삭제
   async deleteCategory(categoryId) {
@@ -157,10 +154,13 @@ export class AdminService {
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.getAllUsers();
   }
+
   //유저 삭제
   async deleteUser(userId: number): Promise<void> {
     return this.userRepository.deleteUser(userId);
   }
+
+
   //-------------------- 게시판  -------------------------
   //모든 유저의 해당 게시글 삭제
   async deleteBoardAdmin(boardId: number): Promise<string> {

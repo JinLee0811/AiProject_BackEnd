@@ -80,6 +80,11 @@ export class SolutionsService {
     return await this.userProblemRepository.getUserSolutions(userId);
   }
 
+  // getSolutionById: (마이페이지) 해결책 상세 조회
+  async getUserSolutionById(userId: number, userSolutionId: number) {
+    return await this.userProblemRepository.getUserSolutionById(userId, userSolutionId)
+  }
+
   // deleteSolutionsById: (마이페이지) 유저해결책 삭제
   async deleteUserSolutionById(userSolutionId: number) {
     return await this.userProblemRepository.deleteUserSolutionById(
