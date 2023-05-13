@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '../entities/user.entity';
@@ -15,28 +16,20 @@ import { RefreshTokenService } from './token.service';
 import { RefreshTokenRepository } from '../repositories/token.repository';
 import { UpdateNicknameDto } from '../dto/update-nickname.dto';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(
-    // private userRepository: UserRepository,
-    // @Inject(RefreshTokenService)
-    // private readonly refreshTokenService: RefreshTokenService,
-    // private readonly jwtService: JwtService,
     private userRepository: UserRepository,
-    private refreshTokenRepository: RefreshTokenRepository, // 추가된 코드
+    private refreshTokenRepository: RefreshTokenRepository,
     private readonly refreshTokenService: RefreshTokenService,
     private readonly jwtService: JwtService,
   ) {}
-  //회원가입
+  //--------------------------------------회원가입--------------------------------------
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, nickname } = createUserDto;
 
-    // email 중복 체크
-    // const email_check = await this.userRepository.findOne({ where: { email } });
-    // if (email_check) {
-    //   throw new BadRequestException('이미 가입된 이메일입니다.');
-    // }
     //닉네임 중복 체크
     const nickname_check = await this.userRepository.findOne({
       where: { nickname },
@@ -65,7 +58,7 @@ export class UserService {
       throw new InternalServerErrorException('회원가입 실패');
     }
   }
-  //로그인
+  //--------------------------------------로그인--------------------------------------
   async login(
     loginUserDto: LoginUserDto,
   ): Promise<{ access_token: string; refresh_token: string }> {
@@ -103,7 +96,7 @@ export class UserService {
       refresh_token: refresh_token.refresh_token,
     };
   }
-
+  //--------------------------------------AT 재발급--------------------------------------
   //acess token(AT) 만료시 새로운 AT발급
   async refreshAccessToken(refreshToken: string): Promise<string> {
     // Refresh Token 검증
@@ -132,7 +125,7 @@ export class UserService {
 
     return accessToken;
   }
-
+  //--------------------------------------로그아웃--------------------------------------
   async signOut(userId: number): Promise<{ message: string }> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -154,17 +147,7 @@ export class UserService {
     return { message: '로그아웃되었습니다.' };
   }
 
-  async getAllUsers() {
-    return await this.userRepository.getAllUsers();
-  }
-
-  // async getUserById(userId: number) {
-  //   const user = await this.userRepository.findOne({
-  //     where: { id: userId },
-  //   });
-  //   return user;
-  // }
-  //나의 정보 조회
+  //--------------------------------------나의 정보 조회--------------------------------------
   async getUserById(userId: number) {
     const query = this.userRepository
       .createQueryBuilder('user')
@@ -208,8 +191,36 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  //회원탈퇴
-  async deleteUser(userId: number) {
-    return await this.userRepository.deleteUser(userId);
+  //--------------------------------------회원탈퇴--------------------------------------
+  async deleteUser(userId: number, password: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    const passwordMatches = await this.comparePasswords(
+      password,
+      user.password,
+    );
+
+    if (!passwordMatches) {
+      throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
+    }
+
+    user.deleted_at = new Date();
+    user.nickname = null;
+    await user.save();
   }
+  //비밀번호 인증
+  async comparePasswords(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+
+  // async getAllUsers() {
+  //   return await this.userRepository.getAllUsers();
+  // }
 }

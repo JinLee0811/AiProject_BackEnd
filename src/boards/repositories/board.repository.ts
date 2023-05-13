@@ -22,13 +22,13 @@ export class BoardRepository extends Repository<Board> {
     user: User,
     imageUrl?: string,
   ) {
-    const { title, content } = createBoardDto;
+    const { title, content, status } = createBoardDto;
 
     const board = this.create({
       title,
       content,
+      status,
       image: imageUrl ?? null,
-      status: BoardStatus.PUBLIC,
       user,
     });
     await this.save(board);
@@ -63,7 +63,7 @@ export class BoardRepository extends Repository<Board> {
     user: User,
     imageUrl?: string,
   ) {
-    const { title, content, image } = updateBoardDto;
+    const { title, content, status, image } = updateBoardDto;
     const board = await this.getBoardById(id);
 
     if (board.user.id !== user.id) {
@@ -72,8 +72,8 @@ export class BoardRepository extends Repository<Board> {
 
     board.title = title;
     board.content = content;
+    board.status = status;
     board.user = user;
-    //console.log('***********************' + board.updated_at);
 
     if (imageUrl !== undefined) {
       // update board_img
@@ -95,7 +95,6 @@ export class BoardRepository extends Repository<Board> {
   async updateBoardStatus(id: number, status: BoardStatus) {
     const board = await this.getBoardById(id);
     board.status = status;
-    //board.updatedAt = new Date();
 
     await this.save(board);
     return board;
@@ -125,4 +124,32 @@ export class BoardRepository extends Repository<Board> {
 
     return '삭제 완료';
   }
+
+  // async toggleLike(boardId: number, userId: number) {
+  //   const userLike = await this.findOne({
+  //     where: { id: boardId, user_id: userId },
+  //   });
+  //   if (userLike) {
+  //     await this.remove(userLike);
+  //     await this.decrement({ id: boardId }, 'likes', 1);
+
+  //     const board = await this.findOne({
+  //       where: { id: boardId },
+  //     });
+  //     //첫 좋아요(likes=0이면)
+  //     if (board.likes === 0) {
+  //       return 0;
+  //     }
+  //     //처음 아닌 경우 -1
+  //     return -1;
+  //   } else {
+  //     await this.insert({
+  //       id: boardId,
+  //       user_id: userId,
+  //       is_liked: true,
+  //     });
+  //     await this.increment({ id: boardId }, 'likes', 1);
+  //     return 1;
+  //   }
+  // }
 }

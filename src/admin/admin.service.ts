@@ -156,8 +156,8 @@ export class AdminService {
   }
 
   //유저 삭제
-  async deleteUser(userId: number): Promise<void> {
-    return this.userRepository.deleteUser(userId);
+  async deleteUserAdmin(userId: number): Promise<void> {
+    return this.userRepository.deleteUserAdmin(userId);
   }
 
 

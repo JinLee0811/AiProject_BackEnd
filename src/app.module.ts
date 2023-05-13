@@ -29,6 +29,7 @@ import { UserProblemRepository } from './solutions/repositories/user-problem.rep
 import { HttpService } from '@nestjs/axios';
 import { AXIOS_INSTANCE_TOKEN } from '@nestjs/axios/dist/http.constants';
 import axios from 'axios';
+import { UserLikeRepository } from './likes/user-like.repository';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import axios from 'axios';
     SolutionRepository,
     UserProblemRepository,
     HttpService,
+    UserLikeRepository,
     {
       provide: AXIOS_INSTANCE_TOKEN,
       useValue: axios.create(), // AXIOS_INSTANCE_TOKEN provider 추가

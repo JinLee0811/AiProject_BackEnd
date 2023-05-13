@@ -13,6 +13,8 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Board } from './board.entity';
@@ -50,6 +52,7 @@ export class BoardController {
   //게시글 생성
   @Post()
   @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
+  // @UsePipes(ValidationPipe)
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async createBoard(
     @Body() createBoardDto: CreateBoardDto,
@@ -69,7 +72,8 @@ export class BoardController {
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
   async updateBoard(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateBoardDto: UpdateBoardDto,
+    @Body()
+    updateBoardDto: UpdateBoardDto,
     @GetUser() user: User,
     @UploadedFile() file,
   ): Promise<Board> {
@@ -82,7 +86,7 @@ export class BoardController {
   }
 
   //공개여부
-  @Patch(':id/status')
+  @Patch('/status/:id')
   async updateBoardStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', BoardStatusValidationPipe) status: BoardStatus,
@@ -100,4 +104,14 @@ export class BoardController {
     const message = await this.boardService.deleteBoard(id, user);
     return { message };
   }
+
+  // @Post('/likes/:id')
+  // @UseGuards(AuthGuard())
+  // async toggleLike(
+  //   @Param('id') id: number,
+  //   @GetUser() user: User,
+  // ): Promise<{ likes: number }> {
+  //   const likes = await this.boardService.toggleLike(id, user.id);
+  //   return { likes };
+  // }
 }
