@@ -117,12 +117,12 @@ export class AdminController {
     return await this.adminService.getAllUsers();
   }
   //유저 삭제
-  @Delete('users/:userId')
-  @UseGuards(AdminAuthGuard)
-  async deleteUser(@Param('userId', ParseIntPipe) id: number) {
-    await this.adminService.deleteUserAdmin(id);
-    return { message: '유저 삭제 완료' };
-  }
+  // @Delete('users/:userId')
+  // @UseGuards(AdminAuthGuard)
+  // async deleteUser(@Param('userId', ParseIntPipe) id: number) {
+  //   await this.adminService.deleteUserAdmin(id);
+  //   return { message: '유저 삭제 완료' };
+  // }
   //-------------------- 게시판  -------------------------
   //게시글 삭제
   @Delete('board/:boardId')
