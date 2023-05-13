@@ -38,6 +38,17 @@ export class UserProblemRepository extends Repository<UserProblem> {
 
     }
 
+    // getSolutionById: (마이페이지) 해결책 상세 조회
+    async getUserSolutionById(user_id: number, id: number) {
+        const userSolution = await this.createQueryBuilder('userProblem')
+            .leftJoinAndSelect("userProblem.solution", "solution")
+            .where("userProblem.user_id = :user_id", {user_id})
+            .andWhere("userProblem.id = :id", {id})
+            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'solution'])
+            .getMany()
+
+        return userSolution
+    }
 
     // deleteSolutionsById: (마이페이지) 해결책 삭제
     async deleteUserSolutionById(userSolutionId:number) {
