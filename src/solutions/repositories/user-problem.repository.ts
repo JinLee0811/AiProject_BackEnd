@@ -45,7 +45,7 @@ export class UserProblemRepository extends Repository<UserProblem> {
             .where("userProblem.user_id = :user_id", {user_id})
             .andWhere("userProblem.id = :id", {id})
             .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'solution'])
-            .getMany()
+            .getOne()
 
         return userSolution
     }
