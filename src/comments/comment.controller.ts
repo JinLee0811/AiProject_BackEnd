@@ -46,19 +46,19 @@ export class CommentController {
   }
 
   //대댓글만 조회
-  //페이지네이션 x
-  // @Get(':commentId')
-  // async getComment(@Param('commentId') commentId: string) {
-  //   return await this.commentService.getComment(Number(commentId));
-  // }
-  //페이지네이션 o
+  // 페이지네이션 x
   @Get(':commentId')
-  async getComment(
-    @Param('commentId') commentId: string,
-    @Query('page') page: number,
-  ) {
-    return await this.commentService.getComment(Number(commentId), page);
+  async getComment(@Param('commentId') commentId: string) {
+    return await this.commentService.getComment(Number(commentId));
   }
+  //페이지네이션 o
+  // @Get(':commentId')
+  // async getComment(
+  //   @Param('commentId') commentId: string,
+  //   @Query('page') page: number,
+  // ) {
+  //   return await this.commentService.getComment(Number(commentId), page);
+  // }
 
   //댓글 수정
   @Patch(':commentId')

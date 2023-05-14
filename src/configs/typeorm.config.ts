@@ -13,7 +13,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
   charset: 'utf8mb4',
-  timezone: 'z',
+  timezone: 'Asia/Seoul',
   dateStrings: true, //날짜 뒤에 스트링 지움
   // logging: ['query'], //쿼리 로그 확인용
 };

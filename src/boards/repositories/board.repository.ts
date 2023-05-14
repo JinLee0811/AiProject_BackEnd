@@ -10,7 +10,6 @@ import { DataSource, Repository } from 'typeorm';
 import { BoardStatus } from '../board-status.enum';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { User } from 'src/users/entities/user.entity';
-
 @Injectable()
 export class BoardRepository extends Repository<Board> {
   constructor(private dataSource: DataSource) {
@@ -31,6 +30,7 @@ export class BoardRepository extends Repository<Board> {
       image: imageUrl ?? null,
       user,
     });
+
     await this.save(board);
     return board;
   }

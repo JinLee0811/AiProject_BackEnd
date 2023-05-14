@@ -47,7 +47,7 @@ export class CommentService {
       parent_comment_id: parentComment?.id,
       user,
     });
-    comment.updated_at = new Date();
+
     return await this.commentRepository.save(comment);
   }
 
@@ -63,32 +63,32 @@ export class CommentService {
   }
 
   //대댓글만 조회
-  // async getComment(commentId: number): Promise<Comment[]> {
-  //   return await this.commentRepository.find({
-  //     where: {
-  //       parent_comment_id: commentId,
-  //       deleted_at: IsNull(),
-  //     },
-  //     order: { created_at: 'ASC' },
-  //   });
-  // }
-  async getComment(
-    commentId: number,
-    page: number = 1,
-    limit: number = 3,
-  ): Promise<Comment[]> {
-    const skip = (page - 1) * limit;
-    const comments = await this.commentRepository.find({
+  async getComment(commentId: number): Promise<Comment[]> {
+    return await this.commentRepository.find({
       where: {
         parent_comment_id: commentId,
         deleted_at: IsNull(),
       },
       order: { created_at: 'ASC' },
-      skip,
-      take: limit,
     });
-    return comments;
   }
+  // async getComment(
+  //   commentId: number,
+  //   page: number = 1,
+  //   limit: number = 3,
+  // ): Promise<Comment[]> {
+  //   const skip = (page - 1) * limit;
+  //   const comments = await this.commentRepository.find({
+  //     where: {
+  //       parent_comment_id: commentId,
+  //       deleted_at: IsNull(),
+  //     },
+  //     order: { created_at: 'ASC' },
+  //     skip,
+  //     take: limit,
+  //   });
+  //   return comments;
+  // }
 
   //댓글 수정
   async updateComment(

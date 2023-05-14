@@ -9,7 +9,7 @@ import {
 import { Comment } from '../comments/comment.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserLike } from 'src/likes/user-like.entity';
-// import { UserLike } from 'src/likes/user-like.entity';
+// import * as moment from 'moment-timezone';
 @Entity()
 export class Board extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
@@ -42,12 +42,26 @@ export class Board extends BaseEntity {
 
   @Column({
     type: 'timestamp',
-    //default: () => 'CURRENT_TIMESTAMP',
     default: null,
     nullable: true,
     //onUpdate: 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
+  // @CreateDateColumn({
+  //   transformer: {
+  //     from: (value: Date) => moment(value).tz('Asia/Seoul').toDate(),
+  //     to: () => new Date(),
+  //   },
+  // })
+  // created_at: Date;
+
+  // @UpdateDateColumn({
+  //   transformer: {
+  //     from: (value: Date) => moment(value).tz('Asia/Seoul').toDate(),
+  //     to: () => new Date(),
+  //   },
+  // })
+  // updated_at: Date;
 
   @OneToMany(() => Comment, (comment) => comment.board)
   comments: Comment[];
