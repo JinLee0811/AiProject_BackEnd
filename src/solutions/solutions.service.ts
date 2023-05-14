@@ -33,7 +33,7 @@ export class SolutionsService {
   async getSolutionByPredict(file) {
     // 모델 예측 로직 작성
 
-    const endpoint = process.env.AI_HOST + "/predict";
+    const endpoint = process.env.AI_HOST + '/predict';
     const url = `${endpoint}?image_key=${file.key}`;
     const result = await this.httpService.post(url).toPromise();
     const { solutionId, probability } = result.data;
@@ -84,7 +84,10 @@ export class SolutionsService {
 
   // getSolutionById: (마이페이지) 해결책 상세 조회
   async getUserSolutionById(userId: number, userSolutionId: number) {
-    return await this.userProblemRepository.getUserSolutionById(userId, userSolutionId)
+    return await this.userProblemRepository.getUserSolutionById(
+      userId,
+      userSolutionId,
+    );
   }
 
   // deleteSolutionsById: (마이페이지) 유저해결책 삭제
