@@ -14,6 +14,8 @@ import { AxiosResponse } from 'axios';
 import { string } from '@tensorflow/tfjs-node';
 import { HttpService } from '@nestjs/axios';
 // import * as querystring from "querystring";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class SolutionsService {
@@ -31,7 +33,7 @@ export class SolutionsService {
   async getSolutionByPredict(file) {
     // 모델 예측 로직 작성
 
-    const endpoint = 'http://127.0.0.1:8000/predict';
+    const endpoint = process.env.AI_HOST + "/predict";
     const url = `${endpoint}?image_key=${file.key}`;
     const result = await this.httpService.post(url).toPromise();
     const { solutionId, probability } = result.data;
@@ -78,6 +80,11 @@ export class SolutionsService {
   // getSolutions: (마이페이지) 유저해결책 조회
   async getUserSolutions(userId: number) {
     return await this.userProblemRepository.getUserSolutions(userId);
+  }
+
+  // getSolutionById: (마이페이지) 해결책 상세 조회
+  async getUserSolutionById(userId: number, userSolutionId: number) {
+    return await this.userProblemRepository.getUserSolutionById(userId, userSolutionId)
   }
 
   // deleteSolutionsById: (마이페이지) 유저해결책 삭제
