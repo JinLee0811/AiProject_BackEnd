@@ -56,8 +56,9 @@ export class CommentService {
     return await this.commentRepository.find({
       where: {
         board: { id: boardId },
+        parent_comment_id: IsNull(),
         deleted_at: IsNull(),
-      }, // 삭제되지 않은 댓글만 조회,
+      }, // 삭제되지 않은 댓글만 조회, 댓글만 조회(대댓글x)
       order: { created_at: 'ASC' },
     });
   }
@@ -70,6 +71,7 @@ export class CommentService {
         deleted_at: IsNull(),
       },
       order: { created_at: 'ASC' },
+      relations: ['user'],
     });
   }
   // async getComment(

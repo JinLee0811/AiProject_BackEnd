@@ -64,6 +64,7 @@ export class BoardRepository extends Repository<Board> {
       where: { id },
       relations: ['user', 'comments', 'comments.user'],
     });
+
     if (!found) {
       throw new NotFoundException(`게시글이 존재하지 않습니다.(id:${id})`);
     }
