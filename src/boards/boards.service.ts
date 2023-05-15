@@ -1,5 +1,9 @@
 //boards.service.ts
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { BoardRepository } from './repositories/board.repository';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatus } from './board-status.enum';
@@ -41,10 +45,34 @@ export class BoardService {
     return board;
   }
   //게시글 상세 조회
+  // async getBoardById(id: number) {
+  //   const found = await this.boardRepository.getBoardById(id);
+  //   return found;
+  // }
+  //게시글 상세 조회 (댓글 필요한 부분)
   async getBoardById(id: number) {
-    const found = await this.boardRepository.getBoardById(id);
+    const found = await this.boardRepository
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.user', 'user')
+      .leftJoinAndSelect(
+        'board.comments',
+        'comment',
+        'comment.parent_comment_id IS NULL AND comment.deleted_at IS NULL',
+      )
+      .leftJoinAndSelect('comment.user', 'commentUser')
+      .where('board.id = :id', { id })
+      .orderBy('comment.created_at', 'DESC') // 작성일 기준으로 내림차순
+      .getOne();
+
+    if (!found) {
+      throw new NotFoundException(`게시글이 존재하지 않습니다.(id:${id})`);
+    }
+
+    found.views++;
+    await this.boardRepository.save(found); //조회수 증가
     return found;
   }
+
   //게시글 수정
   async updateBoard(
     id: number,

@@ -59,7 +59,7 @@ export class CommentService {
         parent_comment_id: IsNull(),
         deleted_at: IsNull(),
       }, // 삭제되지 않은 댓글만 조회, 댓글만 조회(대댓글x)
-      order: { created_at: 'ASC' },
+      order: { created_at: 'DESC' },
     });
   }
 
@@ -70,7 +70,7 @@ export class CommentService {
         parent_comment_id: commentId,
         deleted_at: IsNull(),
       },
-      order: { created_at: 'ASC' },
+      order: { created_at: 'DESC' },
       relations: ['user'],
     });
   }

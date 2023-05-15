@@ -58,7 +58,7 @@ export class BoardRepository extends Repository<Board> {
     });
   }
 
-  //특정 게시글 조회
+  //게시글 상세조회
   async getBoardById(id: number) {
     const found = await this.findOne({
       where: { id },
