@@ -47,7 +47,7 @@ export class CommentService {
       parent_comment_id: parentComment?.id,
       user,
     });
-
+    console.log(comment);
     return await this.commentRepository.save(comment);
   }
 

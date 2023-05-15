@@ -30,6 +30,7 @@ export class UserRepository extends Repository<User> {
     user.deleted_at = new Date();
 
     user.nickname = null;
+    user.password = null; //탈퇴시
     await user.save();
     // await this.remove(user); 유저 완전 삭제(hard-delete)
   }

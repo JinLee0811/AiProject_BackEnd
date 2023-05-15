@@ -210,6 +210,7 @@ export class UserService {
 
     user.deleted_at = new Date();
     user.nickname = null;
+    user.password = null; //탈퇴시
     await user.save();
   }
   //비밀번호 인증
@@ -217,7 +218,16 @@ export class UserService {
     plainTextPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(plainTextPassword, hashedPassword);
+    // return await bcrypt.compare(plainTextPassword, hashedPassword);
+    const passwordMatches = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword,
+    );
+    if (typeof passwordMatches !== 'boolean') {
+      throw new Error('잘못된 반환 값 (bcrypt.compare)');
+    }
+
+    return passwordMatches;
   }
 
   // async getAllUsers() {

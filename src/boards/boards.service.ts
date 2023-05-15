@@ -61,7 +61,7 @@ export class BoardService {
       )
       .leftJoinAndSelect('comment.user', 'commentUser')
       .where('board.id = :id', { id })
-      .orderBy('comment.created_at', 'DESC') // 작성일 기준으로 내림차순
+      .orderBy('comment.created_at', 'ASC') // 작성일 최신이 위로가게
       .getOne();
 
     if (!found) {
