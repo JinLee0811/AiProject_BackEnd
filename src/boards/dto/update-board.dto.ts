@@ -3,8 +3,10 @@ import { BoardStatus } from '../board-status.enum';
 
 export class UpdateBoardDto {
   @IsNotEmpty()
+  @IsOptional()
   title: string;
 
+  @IsOptional()
   @IsNotEmpty()
   content: string;
 

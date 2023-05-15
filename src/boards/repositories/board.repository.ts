@@ -22,17 +22,33 @@ export class BoardRepository extends Repository<Board> {
     imageUrl?: string,
   ) {
     const { title, content, status } = createBoardDto;
+    //==========================KST
+    const now = new Date();
+    const utcDate = now.toISOString();
+    const kstDateTime = new Date(utcDate);
+    kstDateTime.setHours(kstDateTime.getHours() + 9); // UTC 시간에서 9시간을 더해줌
 
-    const board = this.create({
-      title,
-      content,
-      status,
-      image: imageUrl ?? null,
-      user,
-    });
+    // const board = this.create({
+    //   title,
+    //   content,
+    //   status,
+    //   image: imageUrl ?? null,
+    //   user,
+    // });
 
-    await this.save(board);
+    const board = new Board();
+    board.title = title;
+    board.content = content;
+    board.status = status;
+    board.image = imageUrl ?? null;
+    board.user = user;
+    board.created_at = kstDateTime;
+
+    await board.save();
+
     return board;
+    // await this.save(board);
+    // return board;
   }
 
   //게시글 전체 조회
@@ -69,25 +85,41 @@ export class BoardRepository extends Repository<Board> {
     if (board.user.id !== user.id) {
       throw new UnauthorizedException('작성자 본인만 수정이 가능합니다.');
     }
+    //==========================KST
+    const now = new Date();
+    console.log('################' + now);
+    const utcDate = now.toISOString();
 
-    board.title = title;
-    board.content = content;
+    const kstDateTime = new Date(utcDate);
+
+    kstDateTime.setHours(kstDateTime.getHours() + 9);
+    board.updated_at = kstDateTime;
+
+    if (title !== undefined) {
+      board.title = title;
+      board.updated_at = kstDateTime;
+    }
+
+    if (content !== undefined) {
+      board.content = content;
+      board.updated_at = kstDateTime;
+    }
+    // board.title = title;
+    // board.content = content;
     board.status = status;
     board.user = user;
 
     if (imageUrl !== undefined) {
       // update board_img
       board.image = imageUrl;
-    }
-
-    if (imageUrl === undefined) {
+      board.updated_at = kstDateTime;
+    } else {
       // imageUrl가 undefined일 때 이미지 필드를 업데이트하지 않음
-      board.updated_at = new Date();
+      board.updated_at = kstDateTime;
       await this.save(board);
       return board;
     }
 
-    board.updated_at = new Date();
     await this.save(board);
     return board;
   }

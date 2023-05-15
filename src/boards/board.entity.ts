@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
 import { Comment } from '../comments/comment.entity';
 import { User } from 'src/users/entities/user.entity';
