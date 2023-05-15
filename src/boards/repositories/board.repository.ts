@@ -152,7 +152,7 @@ export class BoardRepository extends Repository<Board> {
 
   async deleteBoardAdmin(boardId: number) {
     const board = await this.findOne({ where: { id: boardId } });
-    const result = await this.remove(board);
+    await this.remove(board);
 
     return '삭제 완료';
   }
