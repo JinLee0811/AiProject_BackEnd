@@ -46,32 +46,7 @@ export class CommentService {
       parent_comment_id: parentComment?.id,
       user,
     });
-    // console.log('##############' + board.id);
-    return await this.commentRepository.save(comment);
-  }
-
-  async testComment(
-    boardId: number,
-    createCommentDto: CreateCommentDto,
-    user: User,
-  ): Promise<Comment> {
-    const board = await this.boardRepository.findOne({
-      where: { id: boardId },
-    });
-
-    let parentComment = null;
-    if (createCommentDto.parent_comment_id) {
-      parentComment = await this.commentRepository.findOne({
-        where: { id: createCommentDto.parent_comment_id },
-      });
-    }
-
-    const comment = this.commentRepository.create({
-      ...createCommentDto,
-      board,
-      parent_comment_id: parentComment?.id,
-      user,
-    });
+    console.log('##############' + board.id);
     return await this.commentRepository.save(comment);
   }
 
@@ -84,6 +59,7 @@ export class CommentService {
         deleted_at: IsNull(),
       }, // 삭제되지 않은 댓글만 조회, 대댓글만 조회(댓글 x)
       order: { created_at: 'DESC' },
+      relations: ['user'],
     });
   }
 

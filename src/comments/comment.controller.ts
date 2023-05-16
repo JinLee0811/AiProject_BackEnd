@@ -42,22 +42,6 @@ export class CommentController {
     );
   }
 
-  @Post('/test')
-  @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
-  async testComment(
-    @Param('boardId') boardId: string,
-    @Body() createCommentDto: CreateCommentDto,
-    @GetUser() user: User,
-    // 부모 댓글 ID 전달받음
-  ) {
-    //console.log(boardId);
-    return await this.commentService.createComment(
-      Number(boardId),
-      createCommentDto,
-      user,
-    );
-  }
-
   //댓글 전체 조회
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()

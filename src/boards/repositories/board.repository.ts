@@ -77,13 +77,12 @@ export class BoardRepository extends Repository<Board> {
     }
     //==========================KST
     const now = new Date();
-    console.log('################' + now);
     const utcDate = now.toISOString();
 
     const kstDateTime = new Date(utcDate);
 
     kstDateTime.setHours(kstDateTime.getHours() + 9);
-    board.updated_at = kstDateTime;
+    board.updated_at = new Date();
 
     if (title !== undefined) {
       board.title = title;
