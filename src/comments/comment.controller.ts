@@ -66,22 +66,22 @@ export class CommentController {
   // }
 
   //댓글 수정
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // @Patch(':commentId')
-  // @UseGuards(AuthGuard()) //로그인된 유저만 수정 가능
-  // async updateComment(
-  //   @Param('boardId') boardId: string,
-  //   @Param('commentId') commentId: string,
-  //   @Body() updateCommentDto: UpdateCommentDto,
-  //   @GetUser() user: User,
-  // ) {
-  //   return await this.commentService.updateComment(
-  //     Number(boardId),
-  //     Number(commentId),
-  //     updateCommentDto,
-  //     user,
-  //   );
-  // }
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Patch(':commentId')
+  @UseGuards(AuthGuard()) //로그인된 유저만 수정 가능
+  async updateComment(
+    @Param('boardId') boardId: string,
+    @Param('commentId') commentId: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @GetUser() user: User,
+  ) {
+    return await this.commentService.updateComment(
+      Number(boardId),
+      Number(commentId),
+      updateCommentDto,
+      user,
+    );
+  }
 
   //댓글 삭제
   @Delete(':commentId')
