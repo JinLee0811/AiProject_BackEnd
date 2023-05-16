@@ -22,27 +22,15 @@ export class BoardRepository extends Repository<Board> {
     imageUrl?: string,
   ) {
     const { title, content, status } = createBoardDto;
-    //==========================KST
-    const now = new Date();
-    const utcDate = now.toISOString();
-    const kstDateTime = new Date(utcDate);
-    kstDateTime.setHours(kstDateTime.getHours() + 9); // UTC 시간에서 9시간을 더해줌
-
-    // const board = this.create({
-    //   title,
-    //   content,
-    //   status,
-    //   image: imageUrl ?? null,
-    //   user,
-    // });
 
     const board = new Board();
     board.title = title;
     board.content = content;
     board.status = status;
-    board.image = imageUrl ?? null;
+    board.image =
+      imageUrl ||
+      'https://cdn.discordapp.com/attachments/1104054861995200664/1107966290573922345/8fdbfb54dbb00.jpg';
     board.user = user;
-    board.created_at = kstDateTime;
 
     await board.save();
 

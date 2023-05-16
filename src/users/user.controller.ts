@@ -97,10 +97,6 @@ export class UserController {
     @GetUser() user: User,
     @Body() body: { password: string },
   ): Promise<{ message: string }> {
-    // await this.userService.deleteUser(user.id, body.password);
-    // return {
-    //   message: '유저 삭제 완료',
-    // };
     try {
       await this.userService.deleteUser(user.id, body.password);
       return {
