@@ -94,7 +94,7 @@ export class CommentService {
 
   //댓글 수정
   async updateComment(
-    boardId: number,
+    //boardId: number,
     commentId: number,
     updateCommentDto: UpdateCommentDto,
     user: User,

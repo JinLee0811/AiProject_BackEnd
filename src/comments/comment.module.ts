@@ -7,6 +7,7 @@ import { CommentController } from './comment.controller';
 import { UserRepository } from 'src/users/repositories/user.repository';
 import { UserModule } from 'src/users/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { ChildController } from './childComment.controller'; //추가부분(보류)
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule,
   ],
 
-  controllers: [CommentController],
+  controllers: [CommentController, ChildController],
   providers: [CommentService, UserRepository],
 })
 export class CommentModule {}
