@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { CreateCommentDto } from './dto/crate-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Board } from '../boards/board.entity';
@@ -36,10 +36,9 @@ export class CommentService {
     if (createCommentDto.parent_comment_id) {
       parentComment = await this.commentRepository.findOne({
         where: { id: createCommentDto.parent_comment_id },
+        relations: ['board'],
       });
     }
-
-    // console.log(createCommentDto.parent_comment_id);
 
     const comment = this.commentRepository.create({
       ...createCommentDto,
@@ -47,7 +46,32 @@ export class CommentService {
       parent_comment_id: parentComment?.id,
       user,
     });
-    console.log(comment);
+    // console.log('##############' + board.id);
+    return await this.commentRepository.save(comment);
+  }
+
+  async testComment(
+    boardId: number,
+    createCommentDto: CreateCommentDto,
+    user: User,
+  ): Promise<Comment> {
+    const board = await this.boardRepository.findOne({
+      where: { id: boardId },
+    });
+
+    let parentComment = null;
+    if (createCommentDto.parent_comment_id) {
+      parentComment = await this.commentRepository.findOne({
+        where: { id: createCommentDto.parent_comment_id },
+      });
+    }
+
+    const comment = this.commentRepository.create({
+      ...createCommentDto,
+      board,
+      parent_comment_id: parentComment?.id,
+      user,
+    });
     return await this.commentRepository.save(comment);
   }
 
@@ -56,9 +80,9 @@ export class CommentService {
     return await this.commentRepository.find({
       where: {
         board: { id: boardId },
-        parent_comment_id: IsNull(),
+        parent_comment_id: Not(IsNull()),
         deleted_at: IsNull(),
-      }, // 삭제되지 않은 댓글만 조회, 댓글만 조회(대댓글x)
+      }, // 삭제되지 않은 댓글만 조회, 대댓글만 조회(댓글 x)
       order: { created_at: 'DESC' },
     });
   }

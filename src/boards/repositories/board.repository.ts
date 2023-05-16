@@ -55,6 +55,7 @@ export class BoardRepository extends Repository<Board> {
   async getAllBoards() {
     return await this.find({
       relations: ['user', 'comments', 'comments.user'],
+      order: { created_at: 'DESC' },
     });
   }
 

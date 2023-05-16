@@ -12,6 +12,8 @@ import {
   UseGuards,
   Patch,
   Put,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './services/user.service';
@@ -30,6 +32,7 @@ export class UserController {
     return this.userService.signUp(createUserDto);
   }
   //--------------------------------------로그인--------------------------------------
+
   @Post('/signin')
   async login(@Body() loginUserDto: LoginUserDto) {
     // const token = await this.userService.login(loginUserDto);
@@ -73,6 +76,7 @@ export class UserController {
   }
 
   //닉네임 수정
+  @UseInterceptors(ClassSerializerInterceptor) //password 빼고 보냄
   @Put('/nickname')
   @UseGuards(AuthGuard())
   async updateUserNickname(

@@ -13,8 +13,9 @@ import { RefreshToken } from './token.entity';
 import { Solution } from '../../solutions/entities/solution.entity';
 import { Category } from '../../tonics/entities/category.entity';
 import { UserLike } from 'src/likes/user-like.entity';
-// import { UserLike } from 'src/likes/user-like.entity';
 
+// response에서 제외하게 만들어주는 Exclude
+import { Exclude } from 'class-transformer';
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
@@ -24,6 +25,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column()
@@ -47,6 +49,7 @@ export class User extends BaseEntity {
     default: null,
     nullable: true,
   })
+  @Exclude()
   deleted_at: Date;
 
   // User와 RefreshToken의 일대다(OneToMany) 관계를 정의

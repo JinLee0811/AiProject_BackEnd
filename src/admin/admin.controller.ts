@@ -12,6 +12,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateTonicDto } from './dto/create-tonic.dto';
@@ -56,11 +57,7 @@ export class AdminController {
     // 응답: 수정된 영양제 정보
     // 이미지를 재첨부 하지 않을 시 원래 이미지의 경로가 오는지 빈 값이 오는지 체크
 
-    return await this.adminService.updateTonic(
-      tonicId,
-      file,
-      updateTonicDto,
-    );
+    return await this.adminService.updateTonic(tonicId, file, updateTonicDto);
   }
 
   // deleteTonic: 영양제 삭제
@@ -111,18 +108,19 @@ export class AdminController {
   }
   //-------------------- 유저 관리  -------------------------
   //유저 전체 조회
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('users')
   @UseGuards(AdminAuthGuard)
   async getAllUsers() {
     return await this.adminService.getAllUsers();
   }
   //유저 삭제
-  // @Delete('users/:userId')
-  // @UseGuards(AdminAuthGuard)
-  // async deleteUser(@Param('userId', ParseIntPipe) id: number) {
-  //   await this.adminService.deleteUserAdmin(id);
-  //   return { message: '유저 삭제 완료' };
-  // }
+  @Delete('users/:userId')
+  @UseGuards(AdminAuthGuard)
+  async deleteUser(@Param('userId', ParseIntPipe) id: number) {
+    await this.adminService.deleteUserAdmin(id);
+    return { message: '유저 삭제 완료' };
+  }
   //-------------------- 게시판  -------------------------
   //게시글 삭제
   @Delete('board/:boardId')

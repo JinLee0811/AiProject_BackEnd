@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -10,6 +11,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/users/auth/get-user.decorator';
@@ -23,6 +25,7 @@ import { AdminAuthGuard } from 'src/users/auth/admin-auth.guard';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
   //댓글 생성
+  @UseInterceptors(ClassSerializerInterceptor) //비밀번호 빼고
   @Post()
   @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
   async createComment(
@@ -39,7 +42,24 @@ export class CommentController {
     );
   }
 
+  @Post('/test')
+  @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
+  async testComment(
+    @Param('boardId') boardId: string,
+    @Body() createCommentDto: CreateCommentDto,
+    @GetUser() user: User,
+    // 부모 댓글 ID 전달받음
+  ) {
+    //console.log(boardId);
+    return await this.commentService.createComment(
+      Number(boardId),
+      createCommentDto,
+      user,
+    );
+  }
+
   //댓글 전체 조회
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll(@Param('boardId') boardId: string) {
     return await this.commentService.findAll(Number(boardId));
@@ -47,6 +67,7 @@ export class CommentController {
 
   //대댓글만 조회
   // 페이지네이션 x
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':commentId')
   async getComment(@Param('commentId') commentId: string) {
     return await this.commentService.getComment(Number(commentId));
@@ -61,6 +82,7 @@ export class CommentController {
   // }
 
   //댓글 수정
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':commentId')
   @UseGuards(AuthGuard()) //로그인된 유저만 수정 가능
   async updateComment(

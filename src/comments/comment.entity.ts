@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Board } from '../boards/board.entity';
 
+// response에서 제외하게 만들어주는 Exclude
+import { Exclude } from 'class-transformer';
 @Entity()
 export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
@@ -39,6 +41,7 @@ export class Comment extends BaseEntity {
     default: null,
     nullable: true,
   })
+  @Exclude()
   deleted_at: Date;
   // Board와 Comment 일대다(OneToMany) 관계를 정의
   @ManyToOne(() => Board, (board) => board.comments)

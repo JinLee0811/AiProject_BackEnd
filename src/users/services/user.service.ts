@@ -17,6 +17,7 @@ import { RefreshTokenRepository } from '../repositories/token.repository';
 import { UpdateNicknameDto } from '../dto/update-nickname.dto';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
 import * as bcrypt from 'bcrypt';
+import { IsNull } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -67,6 +68,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         email: loginUserDto.email,
+        deleted_at: IsNull(),
       },
     });
     // 유저가 존재하지 않는 경우

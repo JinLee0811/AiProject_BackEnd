@@ -15,6 +15,7 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Board } from './board.entity';
@@ -31,18 +32,22 @@ import { User } from 'src/users/entities/user.entity';
 @Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
+
   //게시글전체 조회
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async getAllBoards(): Promise<Board[]> {
     return await this.boardService.getAllBoards();
   }
   //게시글 상세조회
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/detail/:id')
   async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
     return await this.boardService.getBoardById(id);
   }
 
   //나의 게시글 조회
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/myboard')
   @UseGuards(AuthGuard())
   async getMyBoard(@GetUser() user: User): Promise<Board[]> {
@@ -50,6 +55,7 @@ export class BoardController {
   }
 
   //게시글 생성
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @UseGuards(AuthGuard()) //로그인된 유저만 생성 가능
   // @UsePipes(ValidationPipe)
@@ -67,6 +73,7 @@ export class BoardController {
     return board;
   }
   //게시글 수정
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @UseGuards(AuthGuard())
   @UseInterceptors(FileInterceptor('image', multerOptions('board')))
@@ -86,6 +93,7 @@ export class BoardController {
   }
 
   //공개여부
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch('/status/:id')
   async updateBoardStatus(
     @Param('id', ParseIntPipe) id: number,
@@ -105,6 +113,8 @@ export class BoardController {
     return { message };
   }
 
+  //좋아요
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('/likes/:id')
   @UseGuards(AuthGuard())
   async toggleLike(
