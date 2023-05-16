@@ -195,25 +195,29 @@ export class UserService {
 
   //--------------------------------------회원탈퇴--------------------------------------
   async deleteUser(userId: number, password: string): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    try {
+      const user = await this.userRepository.findOne({ where: { id: userId } });
 
-    if (!user) {
-      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+      if (!user) {
+        throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+      }
+
+      const passwordMatches = await this.comparePasswords(
+        password,
+        user.password,
+      );
+
+      if (!passwordMatches) {
+        throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
+      }
+
+      user.deleted_at = new Date();
+      user.nickname = null;
+      user.password = null; //탈퇴시
+      await user.save();
+    } catch (error) {
+      throw new Error('회원 탈퇴에 실패했습니다. ' + error.message);
     }
-
-    const passwordMatches = await this.comparePasswords(
-      password,
-      user.password,
-    );
-
-    if (!passwordMatches) {
-      throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
-    }
-
-    user.deleted_at = new Date();
-    user.nickname = null;
-    user.password = null; //탈퇴시
-    await user.save();
   }
   //비밀번호 인증
   async comparePasswords(
@@ -231,8 +235,4 @@ export class UserService {
 
     return passwordMatches;
   }
-
-  // async getAllUsers() {
-  //   return await this.userRepository.getAllUsers();
-  // }
 }

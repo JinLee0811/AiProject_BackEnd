@@ -14,6 +14,7 @@ import {
   Put,
   ClassSerializerInterceptor,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './services/user.service';
@@ -96,9 +97,17 @@ export class UserController {
     @GetUser() user: User,
     @Body() body: { password: string },
   ): Promise<{ message: string }> {
-    await this.userService.deleteUser(user.id, body.password);
-    return {
-      message: '유저 삭제 완료',
-    };
+    // await this.userService.deleteUser(user.id, body.password);
+    // return {
+    //   message: '유저 삭제 완료',
+    // };
+    try {
+      await this.userService.deleteUser(user.id, body.password);
+      return {
+        message: '유저 삭제 완료',
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
