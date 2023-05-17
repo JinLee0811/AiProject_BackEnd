@@ -15,7 +15,6 @@ import { UserLikeRepository } from 'src/likes/user-like.repository';
 
 @Injectable()
 export class BoardService {
-  // constructor(@InjectRepository(BoardRepository)private readonly boardRepository: BoardRepository) {}
   constructor(
     @InjectRepository(BoardRepository)
     private boardRepository: BoardRepository,
@@ -57,47 +56,14 @@ export class BoardService {
     }
 
     return board;
-    // const query = this.boardRepository.createQueryBuilder('board');
-    // query.where('board.user_id = :user_id', { user_id: user.id });
-    // query.leftJoinAndSelect(
-    //   'board.comments',
-    //   'comment',
-    //   'comment.deleted_at IS NULL',
-    // ); //댓글 가져오기
-    // query.leftJoinAndSelect('comment.user', 'commentUser'); //댓글의 유저 가져오기
-    // const board = await query.getMany();
-
-    // return board;
   }
   // 게시글 상세 조회
   // async getBoardById(id: number) {
   //   const found = await this.boardRepository.getBoardById(id);
   //   return found;
   // }
+
   //게시글 상세 조회 (댓글 필요한 부분)
-  // async getBoardById(id: number) {
-  //   const found = await this.boardRepository
-  //     .createQueryBuilder('board')
-  //     .leftJoinAndSelect('board.user', 'user')
-  //     .leftJoinAndSelect(
-  //       'board.comments',
-  //       'comment',
-  //       'comment.deleted_at IS NULL',
-  //     )
-  //     .leftJoinAndSelect('comment.user', 'commentUser')
-  //     .where('board.id = :id', { id })
-  //     .orderBy('comment.created_at', 'ASC') // 작성일 최신이 위로가게
-  //     .getOne();
-
-  //   if (!found) {
-  //     throw new NotFoundException(`게시글이 존재하지 않습니다.(id:${id})`);
-  //   }
-
-  //   found.views++;
-  //   await this.boardRepository.save(found); //조회수 증가
-
-  //   return found;
-  // }
   async getBoardById(id: number) {
     const board = await this.boardRepository
       .createQueryBuilder('board')
@@ -186,5 +152,14 @@ export class BoardService {
       return 1;
       //반환값이 1 , 좋아요 추가
     }
+  }
+
+  //좋아요한 게시글
+  async getMyLikedBoards(user: User) {
+    const userLikes = await this.userLikeRepository.find({
+      where: { user_id: user.id, is_liked: true },
+      relations: ['board'],
+    });
+    return userLikes.map((like) => like.board);
   }
 }

@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserService } from './services/user.service';
@@ -23,7 +23,7 @@ dotenv.config();
     ]),
     JwtModule.register({
       secret: process.env.SECRET_KEY, //토큰 생성시
-      signOptions: { expiresIn: '6h' },
+      signOptions: { expiresIn: '3h' },
     }),
 
     PassportModule.register({
@@ -36,7 +36,6 @@ dotenv.config();
     RefreshTokenRepository,
     RefreshTokenService,
     JwtStrategy,
-    // RedisService
   ],
   controllers: [UserController],
 
