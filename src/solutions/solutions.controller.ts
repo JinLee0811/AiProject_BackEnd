@@ -27,7 +27,6 @@ export class SolutionsController {
 
   // getSolutionByPredict: 질병 진단!
   @Post('/predict')
-  @UseGuards(AuthGuard())
   @UseInterceptors(FileInterceptor('image', multerOptions('crop')))
   getSolutionByPredict(@UploadedFile() file) {
     // 요청: 이미지 1장
