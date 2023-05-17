@@ -41,6 +41,7 @@ export class BoardService {
     const board = await this.boardRepository
       .createQueryBuilder('board')
       .where('board.user_id = :user_id', { user_id: user.id })
+      .leftJoinAndSelect('board.user', 'user')
       .leftJoinAndSelect(
         'board.comments',
         'comment',
