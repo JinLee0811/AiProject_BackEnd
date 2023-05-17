@@ -41,10 +41,20 @@ export class BoardRepository extends Repository<Board> {
 
   //게시글 전체 조회
   async getAllBoards() {
-    return await this.find({
+    // return await this.find({
+    //   relations: ['user', 'comments', 'comments.user'],
+    //   order: { created_at: 'DESC' },
+    // });
+    const boards = await this.find({
       relations: ['user', 'comments', 'comments.user'],
       order: { created_at: 'DESC' },
     });
+    for (const board of boards) {
+      board.commentCount = board.comments.length;
+      delete board.comments;
+    }
+
+    return boards;
   }
 
   //게시글 상세조회
