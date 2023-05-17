@@ -46,7 +46,7 @@ export class CommentService {
       parent_comment_id: parentComment?.id,
       user,
     });
-    console.log('##############' + board.id);
+
     return await this.commentRepository.save(comment);
   }
 
@@ -116,7 +116,7 @@ export class CommentService {
     comment.updated_at = new Date();
 
     // 대댓글 수정
-    if (parent_comment_id) {
+    if (parent_comment_id !== undefined) {
       const parentComment = await this.commentRepository.findOne({
         where: { id: parent_comment_id },
         relations: ['user'],
@@ -125,10 +125,10 @@ export class CommentService {
         throw new UnauthorizedException('작성자 본인만 수정이 가능합니다.');
       }
 
-      comment.parent_comment_id = parent_comment_id;
+      comment.parent_comment_id = parent_comment_id; //기존 값 유지
     } else {
       // 댓글 수정
-      comment.parent_comment_id = null;
+      comment.parent_comment_id = comment.parent_comment_id;
     }
 
     return await this.commentRepository.save(comment);
