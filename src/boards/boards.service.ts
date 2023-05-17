@@ -160,6 +160,6 @@ export class BoardService {
       where: { user_id: user.id, is_liked: true },
       relations: ['board'],
     });
-    return userLikes.map((like) => like.board);
+    return userLikes.map((like) => like.board.id);
   }
 }

@@ -125,4 +125,19 @@ export class BoardController {
     const likes = await this.boardService.toggleLike(id, user.id);
     return { likes };
   }
+
+  //좋아요한 게시글 조회
+  @Get('/likes')
+  // @UseGuards(AuthGuard())
+  // async getMyLikedBoards(@GetUser() user: User): Promise<Board[]> {
+  //   const myLikedBoards = await this.boardService.getMyLikedBoards(user);
+  //   return myLikedBoards;
+  // }
+  @UseGuards(AuthGuard())
+  async getMyLikedBoards(
+    @GetUser() user: User,
+  ): Promise<{ boardId: number[] }> {
+    const boardId = await this.boardService.getMyLikedBoards(user);
+    return { boardId };
+  }
 }
