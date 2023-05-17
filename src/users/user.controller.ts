@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Post,
-  Headers,
   Delete,
   Param,
   HttpCode,
@@ -10,7 +9,6 @@ import {
   ParseIntPipe,
   Get,
   UseGuards,
-  Patch,
   Put,
   ClassSerializerInterceptor,
   UseInterceptors,
@@ -36,14 +34,12 @@ export class UserController {
 
   @Post('/signin')
   async login(@Body() loginUserDto: LoginUserDto) {
-    // const token = await this.userService.login(loginUserDto);
-    // return { token };
-
     const { access_token, refresh_token } = await this.userService.login(
       loginUserDto,
     );
     return { access_token, refresh_token };
   }
+
   //-------------------------------어세스 토큰 재발급 (만료시)-------------------------------
   @Post('/access')
   async refreshAccessToken(@Body('refresh_token') refreshToken: string) {
@@ -51,6 +47,7 @@ export class UserController {
 
     return { access_token: accessToken };
   }
+
   //--------------------------------------로그아웃--------------------------------------
   @Delete('/signout/:userId')
   @UseGuards(AuthGuard()) //로그인한 유저만 가능
@@ -65,6 +62,7 @@ export class UserController {
   async getUserById(@GetUser() user: User): Promise<User> {
     return await this.userService.getUserById(user.id);
   }
+
   //--------------------------------------나의 정보 수정--------------------------------------
   //비밀번호 수정
   @Put('/password')
