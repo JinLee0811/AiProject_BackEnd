@@ -38,11 +38,35 @@ export class BoardService {
   }
   //나의 게시글 조회
   async getMyBoards(user: User) {
-    const query = this.boardRepository.createQueryBuilder('board');
-    query.leftJoinAndSelect('board.user', 'user');
-    query.where('board.user_id = :user_id', { user_id: user.id });
-    const board = await query.getMany();
+    const board = await this.boardRepository
+      .createQueryBuilder('board')
+      .where('board.user_id = :user_id', { user_id: user.id })
+      .leftJoinAndSelect(
+        'board.comments',
+        'comment',
+        'comment.deleted_at IS NULL',
+      )
+      .leftJoinAndSelect('comment.user', 'commentUser')
+      .getMany();
+    //board 배열에 있는 모든 게시물들을 반복
+    for (const a of board) {
+      a.commentCount = a.comments.length;
+      delete a.comments; //댓글 정보를 제거
+      await this.boardRepository.save(a);
+    }
+
     return board;
+    // const query = this.boardRepository.createQueryBuilder('board');
+    // query.where('board.user_id = :user_id', { user_id: user.id });
+    // query.leftJoinAndSelect(
+    //   'board.comments',
+    //   'comment',
+    //   'comment.deleted_at IS NULL',
+    // ); //댓글 가져오기
+    // query.leftJoinAndSelect('comment.user', 'commentUser'); //댓글의 유저 가져오기
+    // const board = await query.getMany();
+
+    // return board;
   }
   // 게시글 상세 조회
   // async getBoardById(id: number) {
@@ -50,8 +74,31 @@ export class BoardService {
   //   return found;
   // }
   //게시글 상세 조회 (댓글 필요한 부분)
+  // async getBoardById(id: number) {
+  //   const found = await this.boardRepository
+  //     .createQueryBuilder('board')
+  //     .leftJoinAndSelect('board.user', 'user')
+  //     .leftJoinAndSelect(
+  //       'board.comments',
+  //       'comment',
+  //       'comment.deleted_at IS NULL',
+  //     )
+  //     .leftJoinAndSelect('comment.user', 'commentUser')
+  //     .where('board.id = :id', { id })
+  //     .orderBy('comment.created_at', 'ASC') // 작성일 최신이 위로가게
+  //     .getOne();
+
+  //   if (!found) {
+  //     throw new NotFoundException(`게시글이 존재하지 않습니다.(id:${id})`);
+  //   }
+
+  //   found.views++;
+  //   await this.boardRepository.save(found); //조회수 증가
+
+  //   return found;
+  // }
   async getBoardById(id: number) {
-    const found = await this.boardRepository
+    const board = await this.boardRepository
       .createQueryBuilder('board')
       .leftJoinAndSelect('board.user', 'user')
       .leftJoinAndSelect(
@@ -64,13 +111,22 @@ export class BoardService {
       .orderBy('comment.created_at', 'ASC') // 작성일 최신이 위로가게
       .getOne();
 
-    if (!found) {
+    if (!board) {
       throw new NotFoundException(`게시글이 존재하지 않습니다.(id:${id})`);
     }
 
-    found.views++;
-    await this.boardRepository.save(found); //조회수 증가
-    return found;
+    board.views++;
+    await this.boardRepository.save(board); //조회수 증가
+
+    const commentCount = board.commentCount; //댓글 개수
+    const currentCommentCount = board.comments.length;
+
+    if (commentCount !== currentCommentCount) {
+      board.commentCount = currentCommentCount;
+      await this.boardRepository.save(board);
+    }
+
+    return board;
   }
 
   //게시글 수정
@@ -100,13 +156,12 @@ export class BoardService {
     return this.boardRepository.deleteBoard(id, user);
   }
 
-  // async toggleLike(boardId: number, userId: number): Promise<number> {
-  //   return this.boardRepository.toggleLike(boardId, userId);
-  // }
+  //좋아요
   async toggleLike(boardId: number, userId: number): Promise<number> {
     const userLike = await this.userLikeRepository.findOne({
       where: { board_id: boardId, user_id: userId },
     });
+
     if (userLike) {
       await this.userLikeRepository.remove(userLike);
       await this.boardRepository.decrement({ id: boardId }, 'likes', 1);
@@ -118,7 +173,7 @@ export class BoardService {
       if (board.likes === 0) {
         return 0;
       }
-      //처음 아닌 경우 -1
+      //게시글의 첫 좋아요가 아닌 경우 -1
       return -1;
     } else {
       await this.userLikeRepository.insert({
@@ -128,6 +183,7 @@ export class BoardService {
       });
       await this.boardRepository.increment({ id: boardId }, 'likes', 1);
       return 1;
+      //반환값이 1 , 좋아요 추가
     }
   }
 }

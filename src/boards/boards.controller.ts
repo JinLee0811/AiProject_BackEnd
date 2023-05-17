@@ -40,6 +40,11 @@ export class BoardController {
     return await this.boardService.getAllBoards();
   }
   //게시글 상세조회
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // @Get('/detail/:id')
+  // async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+  //   return await this.boardService.getBoardById(id);
+  // }
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/detail/:id')
   async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {

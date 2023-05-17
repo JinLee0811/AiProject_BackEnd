@@ -57,4 +57,7 @@ export class Board extends BaseEntity {
   //UserLike 엔티티와의 일대다(OneToMany) 관계
   @OneToMany(() => UserLike, (userLike) => userLike.board)
   userLikes: UserLike[];
+
+  @Column({ default: 0 })
+  commentCount: number;
 }

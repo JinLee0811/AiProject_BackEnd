@@ -9,6 +9,7 @@ import { UserModule } from 'src/users/user.module';
 import { UserRepository } from 'src/users/repositories/user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { UserLikeRepository } from 'src/likes/user-like.repository';
+
 @Module({
   imports: [TypeOrmModule.forFeature([Board]), UserModule, PassportModule],
 
