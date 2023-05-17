@@ -8,7 +8,7 @@ export class SolutionRepository extends Repository<Solution> {
     super(Solution, dataSource.createEntityManager());
   }
 
-  // getSolutionByPredict: 예측된 질병 따른 해결책 조회
+  // getSolutionByPredict: 예측된 질병 따른 해결책 조회!
   async getSolutionById(solutionId:number): Promise<Solution> {
     const solution: Solution=  await this.findOne({
       where: { id: solutionId },

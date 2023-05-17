@@ -38,7 +38,7 @@ export class SolutionsService {
     const result = await this.httpService.post(url).toPromise();
     const { solutionId, probability } = result.data;
 
-    console.log(probability);
+    console.log(probability)
 
     // 예측된 diseaseId를 레포지토리에 넘겨 db에서 해결책 받아옴
     const solution = await this.solutionRepository.getSolutionById(solutionId);
@@ -59,6 +59,7 @@ export class SolutionsService {
       ...solution,
       image: file.location,
       resolved_at: formattedDateStr2,
+      probability: probability
     };
   }
 

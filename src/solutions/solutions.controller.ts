@@ -25,7 +25,7 @@ import { CreateUsersolutionDto } from './dto/create-Usersolution.dto';
 export class SolutionsController {
   constructor(private readonly solutionsService: SolutionsService) {}
 
-  // getSolutionByPredict: 질병 진단
+  // getSolutionByPredict: 질병 진단!
   @Post('/predict')
   @UseInterceptors(FileInterceptor('image', multerOptions('crop')))
   getSolutionByPredict(@UploadedFile() file) {
