@@ -12,6 +12,7 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/repositories/user.repository';
 import { UserLikeRepository } from 'src/likes/user-like.repository';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class BoardService {
@@ -172,6 +173,10 @@ export class BoardService {
       where: { user_id: user.id, is_liked: true },
       relations: ['board'],
     });
+    if (!userLikes) {
+      throw new Error('유저의 좋아요 정보를 가져올 수 없습니다.');
+    }
+    console.log(user.id);
     return userLikes.map((like) => like.board.id);
   }
 }

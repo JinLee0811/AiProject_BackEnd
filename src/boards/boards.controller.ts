@@ -128,11 +128,6 @@ export class BoardController {
 
   //좋아요한 게시글 조회
   @Get('/likes')
-  // @UseGuards(AuthGuard())
-  // async getMyLikedBoards(@GetUser() user: User): Promise<Board[]> {
-  //   const myLikedBoards = await this.boardService.getMyLikedBoards(user);
-  //   return myLikedBoards;
-  // }
   @UseGuards(AuthGuard())
   async getMyLikedBoards(
     @GetUser() user: User,
