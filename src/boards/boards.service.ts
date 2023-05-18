@@ -31,10 +31,12 @@ export class BoardService {
       throw new InternalServerErrorException('게시글 생성 실패');
     }
   }
+
   //게시글 전체 조회
   async getAllBoards() {
     return await this.boardRepository.getAllBoards();
   }
+
   //나의 게시글 조회
   async getMyBoards(user: User) {
     const board = await this.boardRepository
@@ -115,16 +117,26 @@ export class BoardService {
     }
   }
 
+  //게시글 공개 여부 수정
   async updateBoardStatus(id: number, status: BoardStatus) {
     return this.boardRepository.updateBoardStatus(id, status);
   }
 
+  //게시글 삭제
   async deleteBoard(id: number, user: User): Promise<string> {
     return this.boardRepository.deleteBoard(id, user);
   }
 
   //좋아요
   async toggleLike(boardId: number, userId: number): Promise<number> {
+    const board = await this.boardRepository.findOne({
+      where: { id: boardId },
+    });
+    //없는 게시글 아이디로 요청시
+    if (!board) {
+      throw new NotFoundException('게시글을 찾을 수 없습니다.');
+    }
+
     const userLike = await this.userLikeRepository.findOne({
       where: { board_id: boardId, user_id: userId },
     });
@@ -133,9 +145,9 @@ export class BoardService {
       await this.userLikeRepository.remove(userLike);
       await this.boardRepository.decrement({ id: boardId }, 'likes', 1);
 
-      const board = await this.boardRepository.findOne({
-        where: { id: boardId },
-      });
+      // const board = await this.boardRepository.findOne({
+      //   where: { id: boardId },
+      // });
       //첫 좋아요(likes=0이면)
       if (board.likes === 0) {
         return 0;

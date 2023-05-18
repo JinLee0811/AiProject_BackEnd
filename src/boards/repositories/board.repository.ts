@@ -103,8 +103,7 @@ export class BoardRepository extends Repository<Board> {
       board.content = content;
       board.updated_at = kstDateTime;
     }
-    // board.title = title;
-    // board.content = content;
+
     board.status = status;
     board.user = user;
 
@@ -122,6 +121,7 @@ export class BoardRepository extends Repository<Board> {
     await this.save(board);
     return board;
   }
+
   //게시글 공개 여부
   async updateBoardStatus(id: number, status: BoardStatus) {
     const board = await this.getBoardById(id);
@@ -131,6 +131,7 @@ export class BoardRepository extends Repository<Board> {
     return board;
   }
 
+  //게시글 삭제
   async deleteBoard(id: number, user: User) {
     const board = await this.getBoardById(id);
     if (board.user.id !== user.id) {
@@ -149,6 +150,7 @@ export class BoardRepository extends Repository<Board> {
     return '삭제 완료';
   }
 
+  //게시글 삭제(관리자)
   async deleteBoardAdmin(boardId: number) {
     const board = await this.findOne({ where: { id: boardId } });
     await this.remove(board);
