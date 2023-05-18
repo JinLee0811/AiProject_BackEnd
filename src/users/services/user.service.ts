@@ -64,6 +64,9 @@ export class UserService {
     loginUserDto: LoginUserDto,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const { email, password } = loginUserDto;
+    if (!email || !password) {
+      throw new BadRequestException('이메일과 비밀번호를 모두 입력해주세요.');
+    }
     // 이메일로 유저 조회, 비밀번호 확인
     const user = await this.userRepository.findOne({
       where: {
