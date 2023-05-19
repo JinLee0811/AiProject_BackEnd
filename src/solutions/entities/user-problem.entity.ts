@@ -28,6 +28,9 @@ export class UserProblem {
   @Column()
   image: string;
 
+  @Column()
+  probability: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 

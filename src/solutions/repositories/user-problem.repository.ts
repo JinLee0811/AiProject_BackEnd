@@ -13,12 +13,13 @@ export class UserProblemRepository extends Repository<UserProblem> {
     // createSolutions: (마이페이지) 해결책 자장
     async  createUserSolution(userId:number, createUserSolutionDto: CreateUsersolutionDto) {
         // user_problem 테이블 저장
-        const {solution_id, image, resolved_at} = createUserSolutionDto
+        const {solution_id, image, resolved_at, probability} = createUserSolutionDto
         const userSolution = await this.create({
             user_id: userId,
             solution_id,
             image,
-            resolved_at
+            resolved_at,
+            probability
         })
         await this.save(userSolution)
         return userSolution
@@ -31,7 +32,7 @@ export class UserProblemRepository extends Repository<UserProblem> {
         const userSolutions = await this.createQueryBuilder('userProblem')
             .leftJoinAndSelect("userProblem.solution", "solution")
             .where("userProblem.user_id = :user_id", {user_id})
-            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'solution'])
+            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'userProblem.probability', 'solution'])
             .getMany()
 
         return userSolutions
@@ -44,7 +45,7 @@ export class UserProblemRepository extends Repository<UserProblem> {
             .leftJoinAndSelect("userProblem.solution", "solution")
             .where("userProblem.user_id = :user_id", {user_id})
             .andWhere("userProblem.id = :id", {id})
-            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'solution'])
+            .select(['userProblem.id', 'userProblem.image', 'userProblem.created_at', 'userProblem.resolved_at', 'userProblem.probability', 'solution'])
             .getOne()
 
         return userSolution

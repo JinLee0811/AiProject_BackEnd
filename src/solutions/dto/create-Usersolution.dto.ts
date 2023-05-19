@@ -9,4 +9,7 @@ export class CreateUsersolutionDto {
 
   @IsNotEmpty()
   resolved_at: Date;
+
+  @IsNotEmpty()
+  probability: number;
 }
